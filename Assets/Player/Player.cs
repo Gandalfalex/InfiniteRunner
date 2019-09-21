@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
-{
+public class Player : MonoBehaviour{
 
     public float speed;
     public float sideWaySpeed;
     public bool boosted;
-    
-    
+    private float floorWidth;
+
+
+
     private bool isMoving;
     private PlayerEnum playerStats;
     
@@ -23,36 +24,39 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
 
     private Floor floor = new Floor();
-    private CoinGenerator coinClass = new CoinGenerator();
-
-
+    
 
     void Start(){
         boosted = false;
-        coinClass.GenerateCoins(coin);
-        floor.generateFloor(block,obstacle);
+        floor.generateFloor(block,obstacle, coin, (int)transform.position.x);
         
         rb = GetComponent<Rigidbody>();
+        floorWidth = floor.getBlockDepth() * block.transform.localScale.z;
     }
 
 
     
     void FixedUpdate(){
-        Vector3 vel = rb.velocity;
-        vel.z = 0;
-        rb.velocity = vel;
+        Debug.Log(rb.transform.position);
+        rb.velocity = new Vector3(0, rb.velocity.y, 0);
+
+        if(floor.getLastDrawnObject()-rb.position.x <= 20) {
+
+        }
+
+
         if (!playerStats.Equals(PlayerEnum.DEAD)) {
     
             Vector3 moveForward = rb.position;
             moveForward.x += speed * Time.deltaTime;
-            rb.AddForce(moveForward);
-
+            rb.transform.position = moveForward;
 
             if (!isMoving) {
-                if (Input.GetKey("a") && rb.position.z < floor.getBlockDepth() * block.transform.localScale.z) {
+                if (Input.GetKey("a") && rb.position.z < floorWidth) {
+                   
                     moveToPosition(rb.position.z, rb.transform.localScale.z);
                 }
-                else if (Input.GetKey("d") && rb.position.z > -floor.getBlockDepth() * block.transform.localScale.z) {
+                else if (Input.GetKey("d") && rb.position.z > -floorWidth) {
                     moveToPosition(rb.position.z, -rb.transform.localScale.z);
                 }
                 if (rb.transform.position.y < -5) {
@@ -65,7 +69,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision col) {
 
         if (col.gameObject.name.Equals("Cylinder")) {
-            Destroy(col.gameObject);
+            Destroy(col.gameObject,0.3f);
             coins++;    
         }
         else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
@@ -74,25 +78,22 @@ public class Player : MonoBehaviour
                 Debug.Log("hit it " + coins);
             }
         }
-      
     }
-
-
+    
 
     private bool moveToPosition(float actuallPosition_z, float finalPosition_z) {
 
-        float directionalSpeed = finalPosition_z - actuallPosition_z;
-        if(directionalSpeed != 0) {
-            Vector3 moveDirektion = rb.position;
-            moveDirektion.z = moveDirektion.z + sideWaySpeed *Time.deltaTime *directionalSpeed;
-            rb.MovePosition(moveDirektion);
-            return false;
-        }
-        else {
-            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
-            return true;
-        }
+
+        Vector3 moveDirektion = rb.position;
+        moveDirektion.x += speed * Time.deltaTime;
+        moveDirektion.z += sideWaySpeed * Time.deltaTime * finalPosition_z;
+        rb.transform.position = moveDirektion;
+        return true;
+
     }
+
+
+   
 
 
 

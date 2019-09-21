@@ -8,7 +8,7 @@ public class CoinGenerator{
         CoinInstanze god = new CoinInstanze(coin);
        
         for (int i = 0; i<=100; i++) {
-            Vector3 vec = new Vector3(i, 1, 0);
+            Vector3 vec = new Vector3(i, 1, -1);
             god.create(vec);
            
         }  
