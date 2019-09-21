@@ -414,14 +414,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60179615fe2f4144c9d995c9e84610bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8.7
+  speed: 20
   sideWaySpeed: 10
   boosted: 0
+  speedForward: 0
   block: {fileID: 1362861294170297977, guid: d77a7578b6ab2914dbe808b124a8fc55, type: 3}
   obstacle: {fileID: 6462688743463961980, guid: c726760f4b21c734eaf639f38b86815e,
     type: 3}
-  coins: 0
   coin: {fileID: 3563428551536255054, guid: 6c30e4996bcc9c14e9adfd58d4138038, type: 3}
+  coins: 0
 --- !u!54 &1360024323
 Rigidbody:
   m_ObjectHideFlags: 0

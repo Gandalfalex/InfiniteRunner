@@ -8,7 +8,7 @@ public class Player : MonoBehaviour{
     public float sideWaySpeed;
     public bool boosted;
     private float floorWidth;
-
+    public float speedForward;
 
 
     private bool isMoving;
@@ -16,12 +16,13 @@ public class Player : MonoBehaviour{
     
     public GameObject block;
     public GameObject obstacle;
+    public GameObject coin;
 
 
 
     public int coins;
-    public GameObject coin;
     private Rigidbody rb;
+    float moveTowards_z = 0;
 
     private Floor floor = new Floor();
     
@@ -31,39 +32,43 @@ public class Player : MonoBehaviour{
         floor.generateFloor(block,obstacle, coin, (int)transform.position.x);
         
         rb = GetComponent<Rigidbody>();
-        floorWidth = floor.getBlockDepth() * block.transform.localScale.z;
+        floorWidth = block.transform.localScale.z;
     }
 
 
     
     void FixedUpdate(){
-        Debug.Log(rb.transform.position);
+
+        speedForward = speed + rb.position.x / 800;
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
 
-        if(floor.getLastDrawnObject()-rb.position.x <= 20) {
+        floor.UpdateLevel(rb.transform.position.x);
+        Vector3 m = new Vector3(0, 0, 1.8f);
 
+
+        if (Input.anyKeyDown) {
+            StartCoroutine(Move(m));
         }
-
-
-        if (!playerStats.Equals(PlayerEnum.DEAD)) {
-    
+        if (!isMoving) {
             Vector3 moveForward = rb.position;
-            moveForward.x += speed * Time.deltaTime;
+            moveForward.x += speedForward * Time.deltaTime;
             rb.transform.position = moveForward;
-
+        }
+    
+      if (!playerStats.Equals(PlayerEnum.DEAD)) {
+    
             if (!isMoving) {
                 if (Input.GetKey("a") && rb.position.z < floorWidth) {
-                   
-                    moveToPosition(rb.position.z, rb.transform.localScale.z);
+                    StartCoroutine(Move(new Vector3(0,0,block.transform.localScale.z)));
                 }
                 else if (Input.GetKey("d") && rb.position.z > -floorWidth) {
-                    moveToPosition(rb.position.z, -rb.transform.localScale.z);
+                    StartCoroutine(Move(new Vector3(0, 0, -block.transform.localScale.z)));
                 }
                 if (rb.transform.position.y < -5) {
                     playerStats = PlayerEnum.DEAD;
                 }
             }
-        }      
+        } 
     }
 
     void OnCollisionEnter(Collision col) {
@@ -74,26 +79,48 @@ public class Player : MonoBehaviour{
         }
         else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
            // Debug.Log("hit it " + coins + "     " + rb.velocity.x);
-            if (rb.velocity.x == 0) {
-                Debug.Log("hit it " + coins);
-            }
         }
     }
     
 
-    private bool moveToPosition(float actuallPosition_z, float finalPosition_z) {
-
-
+    private void moveToPosition(float finalPosition_z) {
+       
         Vector3 moveDirektion = rb.position;
-        moveDirektion.x += speed * Time.deltaTime;
+        moveDirektion.x += speedForward * Time.deltaTime;
         moveDirektion.z += sideWaySpeed * Time.deltaTime * finalPosition_z;
         rb.transform.position = moveDirektion;
-        return true;
+
 
     }
 
 
-   
+    
+    float speedT = 2f;
+
+    IEnumerator Move(Vector3 offsetFromCurrent) {
+        if (isMoving) yield break; // exit function
+        isMoving = true;
+        Vector3 from = transform.position;
+        Vector3 to = from + offsetFromCurrent;
+        to.x += speedForward * Time.deltaTime;
+        for (float t = 0f; t < 1f; t += Time.deltaTime * speedT) {
+            to.x += speedForward * Time.deltaTime;
+            transform.position = to;
+            yield return null;
+        }
+        isMoving = false;
+    }
+
+    private float[] fillPositionsArray(float localScale_z) {
+        float[] positions = new float[3];
+        int pos = 0;
+        for (float depth = -localScale_z; depth <= localScale_z; depth += localScale_z) {
+            positions[pos] = depth;
+            pos++;
+        }
+        return positions;
+
+    }
 
 
 
@@ -101,4 +128,4 @@ public class Player : MonoBehaviour{
 
 
 
-}
+    }

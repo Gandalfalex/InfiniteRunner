@@ -8,10 +8,10 @@ public class SphereCollisionEnter : MonoBehaviour{
 
         float contactPoint_x = collision.contacts[0].point.x;
         float contactPoint_z = collision.contacts[0].point.z;
-        Debug.Log("Hit it");
+       // Debug.Log("Hit it");
 
         if (collision.gameObject.name.Equals("Sphere") && (contactPoint_x - transform.localScale.x%2) %transform.localScale.x  == 0 && Mathf.Abs(contactPoint_z) != 0.9f) {
-            Debug.Log(contactPoint_x + "   " + transform.localScale.x + "<<<<<z>>>>>" + contactPoint_z + "   " + transform.localScale.z);
+            //Debug.Log(contactPoint_x + "   " + transform.localScale.x + "<<<<<z>>>>>" + contactPoint_z + "   " + transform.localScale.z);
         }
     }
 }
