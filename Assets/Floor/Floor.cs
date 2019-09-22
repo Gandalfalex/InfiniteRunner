@@ -33,7 +33,7 @@ public class Floor {
         }
 
         if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 40 && !stopGenerating) {
-            Debug.Log(groundgenerator.getLastPosition()* obstacleScale.x + "    "  + spherePosition_x + "---------------->" + (groundgenerator.getLastPosition() -(int)spherePosition_x));
+
             stopGenerating = true;
             groundgenerator.SetSize(30);
             groundgenerator.generateLevel();  

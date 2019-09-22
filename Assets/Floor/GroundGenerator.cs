@@ -43,7 +43,7 @@ public class Groundgenerator {
 
     public async void generateLevel() {
         
-        int heigh = 0;
+        int heigh = 1;
         int low = 0;
 
         int end = size + lastPositionOfObject;

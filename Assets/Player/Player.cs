@@ -13,6 +13,7 @@ public class Player : MonoBehaviour{
 
     private bool isMoving;
     private PlayerEnum playerStats;
+    private PlayerManager manager = PlayerManager.Instance;
     
     public GameObject block;
     public GameObject obstacle;
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour{
         
         rb = GetComponent<Rigidbody>();
         floorWidth = block.transform.localScale.z;
+        manager.setCoins(0);
     }
 
 
@@ -43,12 +45,9 @@ public class Player : MonoBehaviour{
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
 
         floor.UpdateLevel(rb.transform.position.x);
-        Vector3 m = new Vector3(0, 0, 1.8f);
+      
 
-
-        if (Input.anyKeyDown) {
-            StartCoroutine(Move(m));
-        }
+       
         if (!isMoving) {
             Vector3 moveForward = rb.position;
             moveForward.x += speedForward * Time.deltaTime;
@@ -59,10 +58,10 @@ public class Player : MonoBehaviour{
     
             if (!isMoving) {
                 if (Input.GetKey("a") && rb.position.z < floorWidth) {
-                    StartCoroutine(Move(new Vector3(0,0,block.transform.localScale.z)));
+                    moveToPosition(block.transform.localScale.z);
                 }
                 else if (Input.GetKey("d") && rb.position.z > -floorWidth) {
-                    StartCoroutine(Move(new Vector3(0, 0, -block.transform.localScale.z)));
+                    moveToPosition(-block.transform.localScale.z);
                 }
                 if (rb.transform.position.y < -5) {
                     playerStats = PlayerEnum.DEAD;
@@ -75,7 +74,8 @@ public class Player : MonoBehaviour{
 
         if (col.gameObject.name.Equals("Cylinder")) {
             Destroy(col.gameObject,0.3f);
-            coins++;    
+            manager.incCoins();
+           
         }
         else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
            // Debug.Log("hit it " + coins + "     " + rb.velocity.x);
