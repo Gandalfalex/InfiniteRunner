@@ -43,6 +43,7 @@ public class Groundgenerator {
 
     public async void generateLevel() {
         
+        
         int heigh = 1;
         int low = 0;
 
@@ -58,14 +59,18 @@ public class Groundgenerator {
                     noCoin = 5;
                 }
             }
-
-            if (noObstacle_x > 0) {
+            if(i-lastPositionOfObject < 5) {
+                foreach (float pos in positions) {
+                    god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                }
+            }
+            else if (noObstacle_x > 0) {
                 foreach (float pos in positions) {
                     god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
                     if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
                         god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                        // god.Create(new Vector3(i * floor_scale_x + 1, 1, positions[coinSpawn_position]- centerCoins), 2);
-                        // god.Create(new Vector3(i * floor_scale_x + 2, 1, positions[coinSpawn_position]- centerCoins), 2);
+                        god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position] - centerCoins), 2);
+                        god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position] - centerCoins), 2);
                     }
                 }
                 noObstacle_x--;
@@ -76,12 +81,13 @@ public class Groundgenerator {
                         god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
                         if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
                             god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                            // god.Create(new Vector3(i * floor_scale_x + 1, 1, positions[coinSpawn_position]- centerCoins), 2);
-                            // god.Create(new Vector3(i * floor_scale_x + 2, 1, positions[coinSpawn_position]- centerCoins), 2);
+                            god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position] - centerCoins), 2);
+                            god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position] - centerCoins), 2);
                         }
                     }
                     else {
                         god.Create(new Vector3(i * obstacle_scale.x, heigh, pos), 1);
+                        god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
                     }
                 }
                 obstacleLenght--;
@@ -91,8 +97,8 @@ public class Groundgenerator {
                     god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
                     if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
                         god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                        // god.Create(new Vector3(i * floor_scale_x + 1, 1, positions[coinSpawn_position]- centerCoins), 2);
-                        // god.Create(new Vector3(i * floor_scale_x + 2, 1, positions[coinSpawn_position]- centerCoins), 2);
+                        god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position]- centerCoins), 2);
+                        god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position]- centerCoins), 2);
                     }
                 }
                 noObstacle_z = Random.Range(0, positions.Length);
@@ -108,6 +114,10 @@ public class Groundgenerator {
     public void SetSize(int size) {
         this.size = size;
     }
+
+
+
+
 
 
 

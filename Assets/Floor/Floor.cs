@@ -25,17 +25,20 @@ public class Floor {
         return positions;
     }
 
+
+
+
+
     public void UpdateLevel(float spherePosition_x) {
-       // Debug.Log(groundgenerator.getLastPosition() + "         " + spherePosition_x);
        
-        if(groundgenerator.getLastPosition()*3 > spherePosition_x + 50) {
+        if(groundgenerator.getLastPosition()*3 > spherePosition_x + 80) {
             stopGenerating = false;
         }
 
         if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 40 && !stopGenerating) {
 
             stopGenerating = true;
-            groundgenerator.SetSize(30);
+            groundgenerator.SetSize(50);
             groundgenerator.generateLevel();  
         }
     }

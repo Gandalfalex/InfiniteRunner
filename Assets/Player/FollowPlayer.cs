@@ -14,10 +14,10 @@ public class FollowPlayer : MonoBehaviour
 
     void LateUpdate() {
 
-        float newXPosition = player.transform.position.x + offset.x;
+        float newXPosition = player.transform.position.x + offset.x-2;
         float newZPosition = player.transform.position.z - offset.z;
 
-        transform.position = new Vector3(newXPosition, 4 , newZPosition);
+        transform.position = new Vector3(newXPosition, 5 , newZPosition);
     }
 
 
