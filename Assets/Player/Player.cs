@@ -42,11 +42,12 @@ public class Player : MonoBehaviour{
 
     
     void FixedUpdate(){
-        if (!manager.getPlayerEnum().Equals(PlayerEnum.DEAD)) {
+        if (!manager.getPlayerEnum().Equals(PlayerEnum.PAUSED)) {
             floor.UpdateLevel(transform.position.x);
-            rb.transform.position = move.moveDirection_X(transform.position);
+            transform.position = move.moveDirection_X(transform.position);
+
             if (move.getMotion()) {
-                rb.transform.position = move.moveToFinalPosition(transform.position);
+                transform.position = move.moveToFinalPosition(transform.position);
             }
 
             if (Input.anyKeyDown) {
@@ -77,7 +78,7 @@ public class Player : MonoBehaviour{
     void OnCollisionEnter(Collision col) {
 
         if (col.gameObject.name.Equals("Cylinder")) {
-            Destroy(col.gameObject);
+            col.gameObject.SetActive(false);
             manager.incCoins();
         }
     }

@@ -21,7 +21,9 @@ public class Groundgenerator {
 
     private bool generate;
 
-    private CreateInstanzes god;
+    private ObjectPooler god;
+    
+
 
 
     public Groundgenerator(Vector3 obstacle_scale, float[] positions, GameObject floor, GameObject obstacle, GameObject coin) {
@@ -33,7 +35,14 @@ public class Groundgenerator {
         coinSpawn = Random.Range(7, 11);
         coinSpawn_position = Random.Range(0, positions.Length);
         centerCoins = obstacle_scale.z / 2;
-        god = new CreateInstanzes(floor, obstacle, coin);
+
+
+        god = ObjectPooler.Instance;
+        god.setCoinGameObject(coin);
+        god.setFloorGameObject(floor);
+        god.setObstacleGameObject(obstacle);
+
+
     }
 
     
@@ -41,7 +50,7 @@ public class Groundgenerator {
         return lastPositionOfObject;
     }
 
-    public async void generateLevel() {
+    public void generateLevel() {
         
         
         int heigh = 1;
@@ -49,7 +58,7 @@ public class Groundgenerator {
 
         int end = size + lastPositionOfObject;
         for (int i = lastPositionOfObject; i < end; i++) {
-
+            //First Stage sets the coins
             if (coinSpawn <= 0) {
                 noCoin--;
                 if (noCoin == 0) {
@@ -59,46 +68,43 @@ public class Groundgenerator {
                     noCoin = 5;
                 }
             }
+            // the free space between after spawn
             if(i-lastPositionOfObject < 5) {
-                foreach (float pos in positions) {
-                    god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                foreach (float pos in positions) { 
+                   handleObjects(ItemTypes.FLOOR,new Vector3(i * obstacle_scale.x, low, pos));
                 }
             }
+            //conditions for no obstacle
             else if (noObstacle_x > 0) {
                 foreach (float pos in positions) {
-                    god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                    handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
                     if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                        god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                        god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position] - centerCoins), 2);
-                        god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position] - centerCoins), 2);
+                        handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
                     }
                 }
                 noObstacle_x--;
             }
+            //now to position the obstacles
             else if (noObstacle_x == 0 && obstacleLenght > 0) {
                 foreach (float pos in positions) {
                     if (pos == positions[noObstacle_z]) {
-                        god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                        handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
                         if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                            god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                            god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position] - centerCoins), 2);
-                            god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position] - centerCoins), 2);
+                            handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
                         }
                     }
                     else {
-                        god.Create(new Vector3(i * obstacle_scale.x, heigh, pos), 1);
-                        god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                       handleObjects(ItemTypes.OBSTACLE,new Vector3(i * obstacle_scale.x, heigh, pos));
                     }
                 }
                 obstacleLenght--;
             }
+            //reset the variables, just Instant for this iteration
             else {
                 foreach (float pos in positions) {
-                    god.Create(new Vector3(i * obstacle_scale.x, low, pos), 0);
+                    handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
                     if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                        god.Create(new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins), 2);
-                        god.Create(new Vector3(i * obstacle_scale.x + 1, 1, positions[coinSpawn_position]- centerCoins), 2);
-                        god.Create(new Vector3(i * obstacle_scale.x - 1, 1, positions[coinSpawn_position]- centerCoins), 2);
+                        handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
                     }
                 }
                 noObstacle_z = Random.Range(0, positions.Length);
@@ -116,34 +122,16 @@ public class Groundgenerator {
     }
 
 
+    public void handleObjects(ItemTypes item, Vector3 position) {
 
+        GameObject temp = god.getOutOfObjectPool(item);
+       
+        if (temp != null) {
+            temp.SetActive(true);
+            temp.transform.position = position;
+            temp.transform.rotation = new Quaternion();
 
-
-
-
-
-    private class CreateInstanzes : MonoBehaviour {
-        private GameObject floor;
-        private GameObject obstacle;
-        private GameObject coin;
-
-
-        public CreateInstanzes(GameObject floor, GameObject obstacle, GameObject coin) {
-            this.floor = floor;
-            this.obstacle = obstacle;
-            this.coin = coin;
-        }
-
-        public void Create(Vector3 vector3, int pos) {
-            if (pos == 0) {
-                Instantiate(floor, vector3, Quaternion.identity);
-            }
-            else if (pos == 1) {
-                Instantiate(obstacle, vector3, Quaternion.identity);
-            }
-            else {
-                Instantiate(coin, vector3, Quaternion.identity);
-            }
         }
     }
+
 }

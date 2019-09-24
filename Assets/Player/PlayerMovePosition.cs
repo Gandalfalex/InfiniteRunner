@@ -28,10 +28,9 @@ public class PlayerMovePosition {
     public Vector3 firstMotion(Vector3 player, float destination) {
         
 
-        if (!inMotion && !activated) {
+        if (!inMotion) {
            
             inMotion = true;
-            activated = true;
             if (player.z == 0) {
                 dest = -destination;
             }
@@ -55,8 +54,9 @@ public class PlayerMovePosition {
             if (Mathf.Abs(dest - player.z) <= 0.05f) {
                 Vector3 nextPosition = player;
                 nextPosition.z = dest;
+
                 inMotion = false;
-                activated = false;
+              
 
                 return nextPosition;
             }

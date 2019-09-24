@@ -31,11 +31,11 @@ public class Floor {
 
     public void UpdateLevel(float spherePosition_x) {
        
-        if(groundgenerator.getLastPosition()*3 > spherePosition_x + 80) {
+        if(groundgenerator.getLastPosition()*3 > spherePosition_x + 10) {
             stopGenerating = false;
         }
 
-        if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 40 && !stopGenerating) {
+        if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 60 && !stopGenerating) {
 
             stopGenerating = true;
             groundgenerator.SetSize(50);
