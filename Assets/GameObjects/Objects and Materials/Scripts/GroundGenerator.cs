@@ -113,6 +113,8 @@ public class Groundgenerator {
 
         if(lastPositionOfObject + offset < obstacles_x_start) {
             handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, (positions[coinSpawn_position] - centerCoins)));
+            handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x+1, heigh, (positions[coinSpawn_position] - centerCoins)));
+            handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x-1, heigh, (positions[coinSpawn_position] - centerCoins)));
         }
 
 
@@ -128,7 +130,7 @@ public class Groundgenerator {
         if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
-            temp.transform.rotation = new Quaternion();
+            temp.transform.rotation = Quaternion.Euler(0,0,0);
         }
     }
 

@@ -8,21 +8,22 @@ public class PlayerMovePosition {
     private bool inMotion;
     private bool activated;
     private float speedForward =10;
-    private bool moving = true;
+    private bool siteHit;
 
     private float dest;
+    private float start;
 
-    
-    
+
+
     public bool getMotion() {
         return inMotion;
     }
 
-    public bool getMoving() {
-        return moving;
+    public bool getSiteHit() {
+        return siteHit;
     }
-    public void setMoving(bool move) {
-        this.moving = move;
+    public void setSiteHit(bool hit) {
+        this.siteHit = hit;
     }
 
     public void setSpeed(float speed) {
@@ -36,7 +37,7 @@ public class PlayerMovePosition {
         
 
         if (!inMotion) {
-           
+            start = player.z;  
             inMotion = true;
             if (player.z == 0) {
                 dest = -destination;
@@ -56,7 +57,7 @@ public class PlayerMovePosition {
 
     public Vector3 moveToFinalPosition(Vector3 player) {
        
-        if (inMotion) {
+        if (inMotion && !siteHit) {
            
             if (Mathf.Abs(dest - player.z) <= 0.05f) {
                 Vector3 nextPosition = player;
@@ -72,7 +73,11 @@ public class PlayerMovePosition {
                 nextPosition.z = dest;
 
                 return Vector3.Lerp(player, nextPosition, speedForward * Time.deltaTime);
-            }   
+            } 
+        }
+        else if (siteHit){
+            dest = start;
+            siteHit = false;
         }
         return player;
     }
@@ -87,5 +92,24 @@ public class PlayerMovePosition {
         return moveForward;
     }
 
+
+
+
+    public HitDirection workWithCollision(Vector3 player, Vector3 collision, Vector3 obstacle, float localScale_z) {
+
+        Debug.Log(collision - player);
+        Vector3 test = (collision-player);
+        if (test.z != 0) {
+            return HitDirection.SITE;
+        }
+
+
+       else if (Mathf.Abs(collision.z) <= (obstacle.z) && Mathf.Abs(collision.z) >= (obstacle.z - localScale_z)) {
+            return HitDirection.FRONT;
+       }
+
+
+        return HitDirection.UNKNOWN;
+    }
 
 }

@@ -21,12 +21,13 @@ public class ObjectPooler  {
 
     public void setCoinGameObject(GameObject coin) {
         GameObject coinHolder = new GameObject("CoinHolder");
-
+   
 
         for (int i = 0; i < 800; i++) {
             GameObject temp = (GameObject)MonoBehaviour.Instantiate(coin);
             temp.SetActive(false);
             coinList.Add(temp);
+          
             temp.transform.parent = coinHolder.transform;
         }
     }

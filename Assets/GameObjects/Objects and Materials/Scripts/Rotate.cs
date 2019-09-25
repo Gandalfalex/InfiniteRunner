@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
-   
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.Rotate(new Vector3(0, 0, 10), 90 * Time.deltaTime); 
+    
+    void Update() {
+        float rotation = Time.time - Time.realtimeSinceStartup;
+        Debug.Log(rotation);
+        transform.Rotate(new Vector3(0, 0, 1), rotation * Time.deltaTime * 20); 
     }
 }

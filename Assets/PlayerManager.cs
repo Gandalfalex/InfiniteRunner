@@ -2,7 +2,7 @@
     private PlayerManager() { }
 
 
-    public PlayerEnum playerEnum;
+    public PlayerStatEnum playerEnum;
     public int coins;
 
 
@@ -14,7 +14,7 @@
 
 
 
-    public void setPlayerEnum(PlayerEnum player) {
+    public void setPlayerEnum(PlayerStatEnum player) {
         this.playerEnum = player;
     }
 
@@ -33,7 +33,7 @@
     }
 
 
-    public PlayerEnum getPlayerEnum() {
+    public PlayerStatEnum getPlayerEnum() {
         return this.playerEnum;
     }
 }

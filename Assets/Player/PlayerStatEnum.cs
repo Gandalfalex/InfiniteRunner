@@ -1,0 +1,3 @@
+﻿public enum PlayerStatEnum {
+    START,STOP,PAUSED,DEAD
+}
