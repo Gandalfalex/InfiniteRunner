@@ -29,6 +29,10 @@ public class Floor {
 
 
 
+    /* if the distance between the player and the last active object is less then 10
+     * then !stopGenerating 
+     * else start generating the new level
+     */
     public void UpdateLevel(float spherePosition_x) {
        
         if(groundgenerator.getLastPosition()*3 > spherePosition_x + 10) {
@@ -39,9 +43,12 @@ public class Floor {
 
             stopGenerating = true;
             groundgenerator.SetSize(50);
-            groundgenerator.generateLevel();  
+            groundgenerator.UpdatePositions();  
         }
     }
 
+    public void setMotionToZero() {
+
+    }
 
 }

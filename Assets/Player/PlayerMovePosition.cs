@@ -8,7 +8,7 @@ public class PlayerMovePosition {
     private bool inMotion;
     private bool activated;
     private float speedForward =10;
-    
+    private bool moving = true;
 
     private float dest;
 
@@ -16,6 +16,13 @@ public class PlayerMovePosition {
     
     public bool getMotion() {
         return inMotion;
+    }
+
+    public bool getMoving() {
+        return moving;
+    }
+    public void setMoving(bool move) {
+        this.moving = move;
     }
 
     public void setSpeed(float speed) {

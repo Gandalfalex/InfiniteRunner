@@ -54,8 +54,7 @@ public class ObjectPooler :MonoBehaviour {
         
         if (item.Equals(ItemTypes.FLOOR)) {
             for (int i = 0; i < floorList.Count; i++) {
-                if (!floorList[i].activeInHierarchy) {
-                   
+                if (!floorList[i].activeInHierarchy) { 
                     return floorList[i];
                 }
             }

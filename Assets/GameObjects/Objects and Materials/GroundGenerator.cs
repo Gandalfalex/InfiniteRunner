@@ -5,9 +5,11 @@ using UnityEngine;
 public class Groundgenerator {
 
     Vector3 obstacle_scale;
+
+
     private int noObstacle_z;
-    private int noObstacle_x;
-    private int obstacleLenght;
+    private int obstacles_x_start;
+    private int obstacles_x_end;
 
     private int coinSpawn;
     private int coinSpawn_position;
@@ -29,9 +31,13 @@ public class Groundgenerator {
     public Groundgenerator(Vector3 obstacle_scale, float[] positions, GameObject floor, GameObject obstacle, GameObject coin) {
         this.obstacle_scale = obstacle_scale;
         this.positions = positions;
+
+
         noObstacle_z = Random.Range(0, positions.Length);
-        noObstacle_x = Random.Range(4, 8);
-        obstacleLenght = Random.Range(3, 6);
+        obstacles_x_start = Random.Range(6, 10);
+        obstacles_x_end = obstacles_x_start + Random.Range(2, 6);
+
+
         coinSpawn = Random.Range(7, 11);
         coinSpawn_position = Random.Range(0, positions.Length);
         centerCoins = obstacle_scale.z / 2;
@@ -50,74 +56,71 @@ public class Groundgenerator {
         return lastPositionOfObject;
     }
 
-    public void generateLevel() {
-        
-        
+    public void generateLevel() { 
         int heigh = 1;
         int low = 0;
+     
+        for (int i = 0; i < size; i++) {
 
-        int end = size + lastPositionOfObject;
-        for (int i = lastPositionOfObject; i < end; i++) {
-            //First Stage sets the coins
-            if (coinSpawn <= 0) {
-                noCoin--;
-                if (noCoin == 0) {
-                    coinSpawn = Random.Range(7, 11);
-                    coinSpawn_position = Random.Range(0, positions.Length);
+            int iScaler = i + lastPositionOfObject;
+            foreach (float pos in positions) {
+                handleObjects(ItemTypes.FLOOR, new Vector3(iScaler * obstacle_scale.x, low, pos));
+            }
 
-                    noCoin = 5;
-                }
-            }
-            // the free space between after spawn
-            if(i-lastPositionOfObject < 5) {
-                foreach (float pos in positions) { 
-                   handleObjects(ItemTypes.FLOOR,new Vector3(i * obstacle_scale.x, low, pos));
-                }
-            }
-            //conditions for no obstacle
-            else if (noObstacle_x > 0) {
+            if( i >= obstacles_x_start && i < obstacles_x_end) {
                 foreach (float pos in positions) {
-                    handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
-                    if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                        handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
-                    }
-                }
-                noObstacle_x--;
-            }
-            //now to position the obstacles
-            else if (noObstacle_x == 0 && obstacleLenght > 0) {
-                foreach (float pos in positions) {
-                    if (pos == positions[noObstacle_z]) {
-                        handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
-                        if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                            handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
-                        }
+                    if (pos != positions[noObstacle_z]) {
+                        handleObjects(ItemTypes.OBSTACLE, new Vector3(iScaler * obstacle_scale.x, heigh, pos));
                     }
                     else {
-                       handleObjects(ItemTypes.OBSTACLE,new Vector3(i * obstacle_scale.x, heigh, pos));
+                        handleObjects(ItemTypes.COIN, new Vector3(iScaler * obstacle_scale.x, heigh, pos - centerCoins));
                     }
                 }
-                obstacleLenght--;
             }
-            //reset the variables, just Instant for this iteration
-            else {
-                foreach (float pos in positions) {
-                    handleObjects(ItemTypes.FLOOR, new Vector3(i * obstacle_scale.x, low, pos));
-                    if (coinSpawn > 0 && pos == positions[coinSpawn_position]) {
-                        handleObjects(ItemTypes.COIN, new Vector3(i * obstacle_scale.x, 1, positions[coinSpawn_position] - centerCoins));
-                    }
-                }
+            else if(i > obstacles_x_end) {
+                obstacles_x_start = i + 5;// Random.Range(6, 10);
+                obstacles_x_end = i + 7;//obstacles_x_start + Random.Range(2, 6);
                 noObstacle_z = Random.Range(0, positions.Length);
-                noObstacle_x = Random.Range(4, 8);
-                obstacleLenght = Random.Range(3, 6);
             }
-            coinSpawn--;
         }
-        lastPositionOfObject += size;
+        lastPositionOfObject = size;
     }
 
 
-    public void SetSize(int size) {
+    public void UpdatePositions() {
+        int heigh = 1;
+        int low = 0;
+
+
+
+        int iScaler = lastPositionOfObject;
+        foreach (float pos in positions) {
+            handleObjects(ItemTypes.FLOOR, new Vector3(lastPositionOfObject * obstacle_scale.x, low, pos));
+        }
+
+        if (lastPositionOfObject >= obstacles_x_start && lastPositionOfObject < obstacles_x_end) {
+            foreach (float pos in positions) {
+                if (pos != positions[noObstacle_z]) {
+                    handleObjects(ItemTypes.OBSTACLE, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, pos));
+                }
+                else {
+                    handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, pos - centerCoins));
+                }
+            }
+        }
+        else if (lastPositionOfObject > obstacles_x_end) {
+            obstacles_x_start = lastPositionOfObject + 5;// Random.Range(6, 10);
+            obstacles_x_end = lastPositionOfObject + 7;//obstacles_x_start + Random.Range(2, 6);
+            noObstacle_z = Random.Range(0, positions.Length);
+        }
+
+
+
+        lastPositionOfObject ++;
+    }
+
+
+        public void SetSize(int size) {
         this.size = size;
     }
 

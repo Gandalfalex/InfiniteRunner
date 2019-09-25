@@ -56,6 +56,10 @@ public class Player : MonoBehaviour{
             }
         }
         speedForward = move.getSpeed();
+
+        if(transform.position.y < -2) {
+            transform.position = new Vector3(transform.position.x, 4, transform.position.z);
+        }
     }
 
     
@@ -80,6 +84,9 @@ public class Player : MonoBehaviour{
         if (col.gameObject.name.Equals("Cylinder")) {
             col.gameObject.SetActive(false);
             manager.incCoins();
+        }
+        else if (!col.gameObject.name.Equals("Floor")) {
+
         }
     }
 
