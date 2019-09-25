@@ -43,7 +43,7 @@ public class Groundgenerator {
         centerCoins = obstacle_scale.z / 2;
 
 
-        god = ObjectPooler.Instance;
+        god = ObjectPooler.instance;
         god.setCoinGameObject(coin);
         god.setFloorGameObject(floor);
         god.setObstacleGameObject(obstacle);
@@ -55,7 +55,7 @@ public class Groundgenerator {
     public int getLastPosition() {
         return lastPositionOfObject;
     }
-
+ 
     public void generateLevel() { 
         int heigh = 1;
         int low = 0;
@@ -66,20 +66,16 @@ public class Groundgenerator {
             foreach (float pos in positions) {
                 handleObjects(ItemTypes.FLOOR, new Vector3(iScaler * obstacle_scale.x, low, pos));
             }
-
             if( i >= obstacles_x_start && i < obstacles_x_end) {
                 foreach (float pos in positions) {
                     if (pos != positions[noObstacle_z]) {
                         handleObjects(ItemTypes.OBSTACLE, new Vector3(iScaler * obstacle_scale.x, heigh, pos));
                     }
-                    else {
-                        handleObjects(ItemTypes.COIN, new Vector3(iScaler * obstacle_scale.x, heigh, pos - centerCoins));
-                    }
                 }
             }
             else if(i > obstacles_x_end) {
-                obstacles_x_start = i + 5;// Random.Range(6, 10);
-                obstacles_x_end = i + 7;//obstacles_x_start + Random.Range(2, 6);
+                obstacles_x_start = i +  Random.Range(6, 10);
+                obstacles_x_end = obstacles_x_start + Random.Range(2, 6);
                 noObstacle_z = Random.Range(0, positions.Length);
             }
         }
@@ -87,13 +83,15 @@ public class Groundgenerator {
     }
 
 
-    public void UpdatePositions() {
+    public void UpdateOnRuntime() {
         int heigh = 1;
         int low = 0;
 
 
 
-        int iScaler = lastPositionOfObject;
+        int offset = 2;
+
+
         foreach (float pos in positions) {
             handleObjects(ItemTypes.FLOOR, new Vector3(lastPositionOfObject * obstacle_scale.x, low, pos));
         }
@@ -103,26 +101,24 @@ public class Groundgenerator {
                 if (pos != positions[noObstacle_z]) {
                     handleObjects(ItemTypes.OBSTACLE, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, pos));
                 }
-                else {
-                    handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, pos - centerCoins));
-                }
             }
         }
         else if (lastPositionOfObject > obstacles_x_end) {
-            obstacles_x_start = lastPositionOfObject + 5;// Random.Range(6, 10);
-            obstacles_x_end = lastPositionOfObject + 7;//obstacles_x_start + Random.Range(2, 6);
+            obstacles_x_start = lastPositionOfObject + Random.Range(6, 10);
+            obstacles_x_end = obstacles_x_start + Random.Range(2, 6);
             noObstacle_z = Random.Range(0, positions.Length);
+            coinSpawn_position =Random.Range(0, positions.Length);
         }
 
+
+        if(lastPositionOfObject + offset < obstacles_x_start) {
+            handleObjects(ItemTypes.COIN, new Vector3(lastPositionOfObject * obstacle_scale.x, heigh, (positions[coinSpawn_position] - centerCoins)));
+        }
 
 
         lastPositionOfObject ++;
     }
 
-
-        public void SetSize(int size) {
-        this.size = size;
-    }
 
 
     public void handleObjects(ItemTypes item, Vector3 position) {
@@ -133,7 +129,6 @@ public class Groundgenerator {
             temp.SetActive(true);
             temp.transform.position = position;
             temp.transform.rotation = new Quaternion();
-
         }
     }
 

@@ -6,9 +6,12 @@ public class SphereCollisionEnter : MonoBehaviour{
    
     void OnCollisionEnter(Collision collision) {
 
-        float contactPoint_x = collision.contacts[0].point.x;
+        
         float contactPoint_z = collision.contacts[0].point.z;
-        // Debug.Log("Hit it");
+        Vector3 test = (collision.contacts[0].point - transform.position);
+        if (test.z != 0) {
+            Debug.Log("site hit");
+        }
 
         GameObject game = collision.gameObject;
         if (pointBetweenBoarders(contactPoint_z, game.transform.localScale, game.transform.position)) {

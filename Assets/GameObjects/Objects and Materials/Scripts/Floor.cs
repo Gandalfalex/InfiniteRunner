@@ -10,12 +10,15 @@ public class Floor {
     private Vector3 obstacleScale;
 
     public void generateFloor(GameObject block, GameObject obstacle, GameObject coin, int spherePosition) {
-        Debug.Log("Generating");
+       
         groundgenerator = new Groundgenerator(obstacle.transform.localScale, fillPositionsArray(obstacle.transform.localScale.z), block, obstacle, coin);
         groundgenerator.generateLevel();
         obstacleScale = block.transform.localScale;
     }
-     private float[] fillPositionsArray(float localScale_z) {
+
+
+
+    private float[] fillPositionsArray(float localScale_z) {
         float[] positions = new float[3];
         int pos = 0;
         for (float depth = -localScale_z; depth <= localScale_z; depth += localScale_z) {
@@ -42,8 +45,7 @@ public class Floor {
         if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 60 && !stopGenerating) {
 
             stopGenerating = true;
-            groundgenerator.SetSize(50);
-            groundgenerator.UpdatePositions();  
+            groundgenerator.UpdateOnRuntime();  
         }
     }
 

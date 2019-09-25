@@ -78,19 +78,13 @@ public class Player : MonoBehaviour{
 
     }
 
-
     void OnCollisionEnter(Collision col) {
-
-        if (col.gameObject.name.Equals("Cylinder")) {
-            col.gameObject.SetActive(false);
+        if (col.gameObject.gameObject.name.Equals("Coin(Clone)")) {
             manager.incCoins();
-        }
-        else if (!col.gameObject.name.Equals("Floor")) {
-
+            col.gameObject.gameObject.SetActive(false);
         }
     }
 
 
 
-
-}
+    }
