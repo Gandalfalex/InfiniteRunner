@@ -47,7 +47,7 @@ public class Player : MonoBehaviour{
                 transform.position = move.moveToFinalPosition(transform.position);
             }
 
-            if (Input.anyKeyDown) {
+            if (Input.GetKey("a") || Input.GetKey("d")) {
                 float dirct = Input.GetAxisRaw("Horizontal");
                 move.firstMotion(transform.position, (dirct * block.transform.localScale.x));
             }
