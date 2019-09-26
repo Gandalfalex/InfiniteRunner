@@ -1,27 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Floor {
 
   
     private Groundgenerator groundgenerator;
     private bool stopGenerating = false;
-    private Vector3 obstacleScale;
+   
 
     public void generateFloor(GameObject block, GameObject obstacle, GameObject coin, int spherePosition) {
        
-        groundgenerator = new Groundgenerator(obstacle.transform.localScale, fillPositionsArray(obstacle.transform.localScale.z), block, obstacle, coin);
+        groundgenerator = new Groundgenerator(obstacle.transform.localScale, fillPositionsArray(obstacle.transform.localScale.x), block, obstacle, coin);
         groundgenerator.generateLevel();
-        obstacleScale = block.transform.localScale;
+       
     }
 
 
 
-    private float[] fillPositionsArray(float localScale_z) {
+    private float[] fillPositionsArray(float localScale_x) {
         float[] positions = new float[3];
         int pos = 0;
-        for (float depth = -localScale_z; depth <= localScale_z; depth += localScale_z) {
+        for (float depth = -localScale_x; depth <= localScale_x; depth += localScale_x) {
             positions[pos] = depth;
             pos++;
         }
@@ -36,16 +34,16 @@ public class Floor {
      * then !stopGenerating 
      * else start generating the new level
      */
-    public void UpdateLevel(float spherePosition_x) {
-       
-        if(groundgenerator.getLastPosition()*3 > spherePosition_x + 10) {
+    public void UpdateLevel(float spherePosition_z, float localScale_z) {
+      
+        if(groundgenerator.getLastPosition() * localScale_z > spherePosition_z + 10) {
             stopGenerating = false;
         }
 
-        if (groundgenerator.getLastPosition() * obstacleScale.x - spherePosition_x < 60 && !stopGenerating) {
-
+        if (groundgenerator.getLastPosition() * localScale_z - spherePosition_z < 60 && !stopGenerating) {
             stopGenerating = true;
-            groundgenerator.UpdateOnRuntime();  
+            Debug.Log(groundgenerator.getLastPosition() * localScale_z);
+            groundgenerator.UpdateAtRuntime();  
         }
     }
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovePosition {
 
@@ -37,18 +35,17 @@ public class PlayerMovePosition {
         
 
         if (!inMotion) {
-            start = player.z;  
+            start = player.x;  
             inMotion = true;
-            if (player.z == 0) {
-                dest = -destination;
+            if (player.x == 0) {
+                dest = destination;
             }
             else {
                 dest = 0;
             }
 
             Vector3 nextPosition = player;
-            nextPosition.z = dest;
-
+            nextPosition.x = dest;
             return Vector3.Lerp(player, nextPosition, 3 * Time.deltaTime);
         }
         return player;
@@ -56,21 +53,20 @@ public class PlayerMovePosition {
 
 
     public Vector3 moveToFinalPosition(Vector3 player) {
-       
         if (inMotion && !siteHit) {
            
-            if (Mathf.Abs(dest - player.z) <= 0.05f) {
+            if (Mathf.Abs(dest - player.x) <= 0.05f) {
                 Vector3 nextPosition = player;
-                nextPosition.z = dest;
+                nextPosition.x = dest;
 
                 inMotion = false;
               
 
                 return nextPosition;
             }
-            else if (player.z != dest) {
+            else if (player.x != dest) {
                 Vector3 nextPosition = player;
-                nextPosition.z = dest;
+                nextPosition.x = dest;
 
                 return Vector3.Lerp(player, nextPosition, speedForward * Time.deltaTime);
             } 
@@ -83,32 +79,26 @@ public class PlayerMovePosition {
     }
 
 
-    public Vector3 moveDirection_X(Vector3 player) {
-        speedForward += player.x/ 1000 ;
+    public Vector3 moveDirection_z(Vector3 player) {
+        speedForward += player.z/ 1000f ;
         if (speedForward > 20) {
             speedForward = 20;
         }
-        Vector3 moveForward = new Vector3(player.x + speedForward * Time.deltaTime, player.y, player.z);
+        Vector3 moveForward = new Vector3(player.x, player.y, player.z + speedForward * Time.deltaTime);
         return moveForward;
     }
 
 
 
 
-    public HitDirection workWithCollision(Vector3 player, Vector3 collision, Vector3 obstacle, float localScale_z) {
-
-        Debug.Log(collision - player);
-        Vector3 test = (collision-player);
-        if (test.z != 0) {
+    public HitDirection workWithCollision(Vector3 player, Vector3 collision, Vector3 obstacle, float localScale_x) {
+        Vector3 temp = (collision-player);
+        if (temp.x != 0) {
             return HitDirection.SITE;
         }
-
-
-       else if (Mathf.Abs(collision.z) <= (obstacle.z) && Mathf.Abs(collision.z) >= (obstacle.z - localScale_z)) {
+        else if (Mathf.Abs(collision.x) <= (obstacle.x) && Mathf.Abs(collision.x) >= (obstacle.x - localScale_x)) {
             return HitDirection.FRONT;
-       }
-
-
+        }
         return HitDirection.UNKNOWN;
     }
 

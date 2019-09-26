@@ -39,9 +39,9 @@ public class Player : MonoBehaviour{
 
     
     void FixedUpdate(){
-        if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
-            floor.UpdateLevel(transform.position.x);
-            transform.position = move.moveDirection_X(transform.position);
+        if (!manager.getPlayerEnum().Equals(PlayerStatEnum.DEAD)) {
+            floor.UpdateLevel(transform.position.z, block.transform.localScale.z);
+            transform.position = move.moveDirection_z(transform.position);
 
             if (move.getMotion()) {
                 transform.position = move.moveToFinalPosition(transform.position);
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour{
 
             if (Input.anyKeyDown) {
                 float dirct = Input.GetAxisRaw("Horizontal");
-                move.firstMotion(transform.position, dirct * block.transform.localScale.z);
+                move.firstMotion(transform.position, (dirct * block.transform.localScale.x));
             }
         }
         speedForward = move.getSpeed();
@@ -64,17 +64,7 @@ public class Player : MonoBehaviour{
 
 
 
-    private float[] fillPositionsArray() {
-        float localScale_z = block.transform.localScale.z;
-        float[] positions = new float[3];
-        int pos = 0;
-        for (float depth = -localScale_z; depth <= localScale_z; depth += localScale_z) {
-            positions[pos] = depth;
-            pos++;
-        }
-        return positions;
-
-    }
+    
 
     void OnCollisionEnter(Collision col) {
 
@@ -83,10 +73,16 @@ public class Player : MonoBehaviour{
             col.gameObject.gameObject.SetActive(false);
         }
         else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
-            HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.z);
+            HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
                 move.setSiteHit(true);
+                Debug.Log("sitehit");
                 StartCoroutine(shakeCam(0.2f));
+            }
+            if (hit.Equals(HitDirection.FRONT)) {
+                PlayerManager manager = PlayerManager.Instance;
+                manager.setPlayerEnum(PlayerStatEnum.DEAD);
+                Debug.Log("front hit");
             }
         }
     }
@@ -94,8 +90,8 @@ public class Player : MonoBehaviour{
 
     public void handleCamMovement() {
 
-        float newXPosition = transform.position.x + offset.x - 2;
-        float newZPosition = transform.position.z - offset.z;
+        float newXPosition = transform.position.x - offset.x ;
+        float newZPosition = transform.position.z - offset.z - 15 ;
 
         cam.transform.position = new Vector3(newXPosition, 5, newZPosition);
     }

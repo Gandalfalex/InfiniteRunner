@@ -11,7 +11,7 @@ public class BlockDestroy : MonoBehaviour
     // Update is called once per frame
     void Update(){
         camPos = GameObject.Find("Sphere");
-        if (transform.position.x < camPos.transform.position.x - 20) {
+        if (transform.position.z < camPos.transform.position.z - 20) {
             gameObject.SetActive(false);   
         }
         
