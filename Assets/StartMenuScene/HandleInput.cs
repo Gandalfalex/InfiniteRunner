@@ -1,14 +1,18 @@
-﻿
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HandleInput { 
+public class HandleInput : MonoBehaviour { 
    
    
-    public void startGame() {
-        SceneManager.LoadScene("GameScene", LoadSceneMode.Additive);
+    public async void startGame() {
+        SceneManager.LoadScene("GameScene");
     }
 
 
+  
+    public void exitGame() {
+        Application.Quit();
+    }
 
 
 }
