@@ -28,10 +28,11 @@ public class Player : MonoBehaviour{
     private Floor floor = new Floor();
     private bool blocked;
     private float startpoint;
-    private float endpoint;
+    private float directionRaw;
 
 
     void Start(){
+        Debug.Log(Screen.currentResolution);
         boosted = false;
         floor.generateFloor(block,obstacle, coin, (int)transform.position.x);
         manager.setCoins(0);
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour{
 
     
     void FixedUpdate(){
+        
         if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
             floor.UpdateLevel(transform.position.z, block.transform.localScale.z);
             transform.position = move.moveDirection_z(transform.position);
@@ -65,9 +67,9 @@ public class Player : MonoBehaviour{
                 else if (touch.phase.Equals(TouchPhase.Ended) && blocked) {
                   
                     blocked = true;
-                    endpoint = touch.position.x;
-                    float temp = (startpoint - endpoint) / Mathf.Abs(startpoint - endpoint);
-                    move.firstMotion(transform.position, (-temp * block.transform.localScale.x));
+                    directionRaw = touch.position.x - startpoint;
+                    float temp = directionRaw / Mathf.Abs(directionRaw);
+                    move.firstMotion(transform.position, (temp * block.transform.localScale.x));
                 }
            }
         }

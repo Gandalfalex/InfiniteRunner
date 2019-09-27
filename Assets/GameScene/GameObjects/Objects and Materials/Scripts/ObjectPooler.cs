@@ -23,7 +23,7 @@ public class ObjectPooler  {
         GameObject coinHolder = new GameObject("CoinHolder");
    
 
-        for (int i = 0; i < 800; i++) {
+        for (int i = 0; i <20; i++) {
             GameObject temp = (GameObject)MonoBehaviour.Instantiate(coin);
             temp.SetActive(false);
             coinList.Add(temp);
@@ -34,7 +34,7 @@ public class ObjectPooler  {
     public void setFloorGameObject(GameObject floor) {
         GameObject floorHolder = new GameObject("Floor Holder");
 
-        for (int i = 0; i <300; i++) {
+        for (int i = 0; i < 600; i++) {
             GameObject temp = (GameObject)MonoBehaviour.Instantiate(floor);
             temp.SetActive(false);
             floorList.Add(temp);
