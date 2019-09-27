@@ -5,7 +5,7 @@ public class PlayerMovePosition {
 
     private bool inMotion;
     private bool activated;
-    private float speedForward =10;
+    private float speedForward = 9;
     private bool siteHit;
 
     private float dest;
@@ -81,8 +81,8 @@ public class PlayerMovePosition {
 
     public Vector3 moveDirection_z(Vector3 player) {
         speedForward += player.z/ 1000f ;
-        if (speedForward > 20) {
-            speedForward = 20;
+        if (speedForward > 10) {
+            speedForward = 10;
         }
         Vector3 moveForward = new Vector3(player.x, player.y, player.z + speedForward * Time.deltaTime);
         return moveForward;

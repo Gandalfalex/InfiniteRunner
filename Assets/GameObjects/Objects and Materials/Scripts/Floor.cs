@@ -42,7 +42,7 @@ public class Floor {
 
         if (groundgenerator.getLastPosition() * localScale_z - spherePosition_z < 60 && !stopGenerating) {
             stopGenerating = true;
-            Debug.Log(groundgenerator.getLastPosition() * localScale_z);
+
             groundgenerator.UpdateAtRuntime();  
         }
     }

@@ -19,15 +19,17 @@ public class Player : MonoBehaviour{
     public GameObject cam;
 
     public Vector3 offset;
-
+    float lastClick;
 
 
     public int coins;
-    float blockedTime = 0;
+    
 
     private Floor floor = new Floor();
-    bool blocked;
-    
+    private bool blocked;
+    private float startpoint;
+    private float endpoint;
+
 
     void Start(){
         boosted = false;
@@ -39,7 +41,7 @@ public class Player : MonoBehaviour{
 
     
     void FixedUpdate(){
-        if (!manager.getPlayerEnum().Equals(PlayerStatEnum.DEAD)) {
+        if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
             floor.UpdateLevel(transform.position.z, block.transform.localScale.z);
             transform.position = move.moveDirection_z(transform.position);
 
@@ -51,6 +53,23 @@ public class Player : MonoBehaviour{
                 float dirct = Input.GetAxisRaw("Horizontal");
                 move.firstMotion(transform.position, (dirct * block.transform.localScale.x));
             }
+          
+           else if(Input.touchCount>0) {
+                Touch touch = Input.touches[0];
+               
+                if (touch.phase.Equals(TouchPhase.Began) && !blocked) {
+                   
+                    blocked = true;
+                    startpoint = touch.position.x;
+                }
+                else if (touch.phase.Equals(TouchPhase.Ended) && blocked) {
+                  
+                    blocked = true;
+                    endpoint = touch.position.x;
+                    float temp = (startpoint - endpoint) / Mathf.Abs(startpoint - endpoint);
+                    move.firstMotion(transform.position, (-temp * block.transform.localScale.x));
+                }
+           }
         }
         speedForward = move.getSpeed();
 
@@ -76,8 +95,8 @@ public class Player : MonoBehaviour{
             HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
                 move.setSiteHit(true);
-                Debug.Log("sitehit");
                 StartCoroutine(shakeCam(0.2f));
+                Vibration.Vibrate(50);
             }
             if (hit.Equals(HitDirection.FRONT)) {
                 PlayerManager manager = PlayerManager.Instance;
@@ -98,8 +117,6 @@ public class Player : MonoBehaviour{
 
     private IEnumerator shakeCam(float time) {
 
-
-        
         float duration = 0f;
         while(duration < time) {
             Vector3 pos = cam.transform.position;
@@ -112,4 +129,5 @@ public class Player : MonoBehaviour{
 
         handleCamMovement();
     }
+        
 }
