@@ -2,17 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+/* This Class sets all objects, who are behind the Player, to inactive.
+ * this way the Objectpooler Class can reposition their location and 
+ * set them to active if they are needed.
+ * This Class is part of every Object
+ * the Update Method should be called once a second for performance;
+*/
 public class BlockDestroy : MonoBehaviour
 {
 
-    private GameObject camPos;
+    private GameObject player;
+    private float time;
 
+    private void Start() {
+        time = Time.time;
+    }
 
-    // Update is called once per frame
     void Update(){
-        camPos = GameObject.Find("Sphere");
-        if (transform.position.z < camPos.transform.position.z - 20) {
-            gameObject.SetActive(false);   
+
+        if (Time.time - time > 1) {
+            time = Time.time;
+            player = GameObject.Find("Sphere");
+            if (transform.position.z < player.transform.position.z - 20) {
+                gameObject.SetActive(false);
+            }
         }
         
     }

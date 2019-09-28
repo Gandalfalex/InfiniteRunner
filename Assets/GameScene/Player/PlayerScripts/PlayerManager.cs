@@ -1,9 +1,11 @@
 ﻿public sealed class PlayerManager{
     private PlayerManager() { }
-
+        
 
     public PlayerStatEnum playerEnum;
     public int coins;
+    public bool nearDeath = false;
+    public float time;
 
 
     public static PlayerManager Instance {
@@ -36,4 +38,13 @@
     public PlayerStatEnum getPlayerEnum() {
         return this.playerEnum;
     }
+
+    public void setNearDeath(bool death) {
+        nearDeath = death;
+    }
+     
+    public bool getNearDeath() {
+        return nearDeath;
+    }
+
 }

@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 
+
+
+/*this class handles the leveldesign and generation.
+ 
+ */
 public class Groundgenerator {
 
     Vector3 obstacle_scale;
@@ -23,11 +28,11 @@ public class Groundgenerator {
 
 
 
-    
-    public Groundgenerator(Vector3 obstacle_scale, float[] positions, GameObject floor, GameObject obstacle, GameObject coin) {
-        this.obstacle_scale = obstacle_scale;
+    /*Sets up random vars to generate the level
+     */
+    public Groundgenerator(float[] positions, GameObject floor, GameObject obstacle, GameObject coin) {
+        this.obstacle_scale = floor.transform.localScale;
         this.positions = positions;
-
 
         noObstacle_x = Random.Range(0, positions.Length);
         obstacles_z_start = Random.Range(6, 10);
@@ -36,15 +41,11 @@ public class Groundgenerator {
 
         coinSpawn = Random.Range(7, 11);
         coinSpawn_position = Random.Range(0, positions.Length);
-       
-
 
         god = ObjectPooler.instance;
         god.setCoinGameObject(coin);
         god.setFloorGameObject(floor);
         god.setObstacleGameObject(obstacle);
-
-
     }
 
     
@@ -52,6 +53,9 @@ public class Groundgenerator {
         return lastPositionOfObject;
     }
  
+
+    /*Generates the first part. The rest will be generated at run time
+     */
     public void generateLevel() { 
         int heigh = 1;
         int low = 0;
@@ -59,9 +63,11 @@ public class Groundgenerator {
         for (int i = 0; i < size; i++) {
 
             int iScaler = i + lastPositionOfObject;
+            
             foreach (float pos in positions) {
                 handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * obstacle_scale.z));
             }
+           
             if( i >= obstacles_z_start && i < obstacles_z_end) {
                 foreach (float pos in positions) {
                     if (pos != positions[noObstacle_x]) {
@@ -79,11 +85,13 @@ public class Groundgenerator {
     }
 
 
+
+    /*based on their position, this method only creates a small part of the map
+     */
     public void UpdateAtRuntime() {
         int heigh = 1;
         int low = 0;
         int offset = 2;
-
 
         foreach (float pos in positions) {
             handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * obstacle_scale.z));
@@ -105,16 +113,15 @@ public class Groundgenerator {
 
 
         if(lastPositionOfObject + offset < obstacles_z_start) {
-
            handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * obstacle_scale.z));
-          
         }
 
         lastPositionOfObject ++;
     }
 
 
-
+    /* activates new Prefabs, sets them active
+     */
     public void handleObjects(ItemTypes item, Vector3 position) {
 
         GameObject temp = god.getOutOfObjectPool(item);
@@ -122,8 +129,17 @@ public class Groundgenerator {
         if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
-            temp.transform.rotation = Quaternion.identity;
+            temp.transform.rotation = Quaternion.Euler(0,0,0);
         }
+    }
+
+
+
+
+    /* sets the objectpooler to default
+     */
+    public void destroyObjectPooler() {
+        god.kill();
     }
 
 }

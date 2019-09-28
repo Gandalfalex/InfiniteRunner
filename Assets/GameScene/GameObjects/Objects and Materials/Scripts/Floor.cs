@@ -9,7 +9,7 @@ public class Floor {
 
     public void generateFloor(GameObject block, GameObject obstacle, GameObject coin, int spherePosition) {
        
-        groundgenerator = new Groundgenerator(obstacle.transform.localScale, fillPositionsArray(obstacle.transform.localScale.x), block, obstacle, coin);
+        groundgenerator = new Groundgenerator(fillPositionsArray(obstacle.transform.localScale.x), block, obstacle, coin);
         groundgenerator.generateLevel();
        
     }
@@ -35,20 +35,13 @@ public class Floor {
      * else start generating the new level
      */
     public void UpdateLevel(float spherePosition_z, float localScale_z) {
-      
-        if(groundgenerator.getLastPosition() * localScale_z > spherePosition_z + 10) {
-            stopGenerating = false;
-        }
-
-        if (groundgenerator.getLastPosition() * localScale_z - spherePosition_z < 200 && !stopGenerating) {
-            stopGenerating = true;
-
+        if (groundgenerator.getLastPosition() * localScale_z - spherePosition_z < 200){
             groundgenerator.UpdateAtRuntime();  
         }
     }
 
-    public void setMotionToZero() {
-
+    public void cleanPooler() {
+        groundgenerator.destroyObjectPooler();
     }
 
 }

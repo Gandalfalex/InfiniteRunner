@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour{
 
@@ -23,6 +23,7 @@ public class Player : MonoBehaviour{
 
 
     public int coins;
+
     
 
     private Floor floor = new Floor();
@@ -37,10 +38,13 @@ public class Player : MonoBehaviour{
         floor.generateFloor(block,obstacle, coin, (int)transform.position.x);
         manager.setCoins(0);
         offset = cam.transform.position - transform.position;
+        move.setSpeed(20);
     }
 
 
-    
+    public void setUp() {
+        Start();
+    }
     void FixedUpdate(){
         
         if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
@@ -77,6 +81,7 @@ public class Player : MonoBehaviour{
 
         if(transform.position.y < -2) {
             transform.position = new Vector3(transform.position.x, 4, transform.position.z);
+            
         }
         handleCamMovement();
     }
@@ -94,16 +99,21 @@ public class Player : MonoBehaviour{
             col.gameObject.gameObject.SetActive(false);
         }
         else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
+            Debug.Log("hit");
             HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
+                Debug.Log(" site hit");
                 move.setSiteHit(true);
                 StartCoroutine(shakeCam(0.2f));
                 Vibration.Vibrate(50);
+                manager.setNearDeath(true);
             }
-            if (hit.Equals(HitDirection.FRONT)) {
+            else{//if (hit.Equals(HitDirection.FRONT)) {
                 PlayerManager manager = PlayerManager.Instance;
                 manager.setPlayerEnum(PlayerStatEnum.DEAD);
                 Debug.Log("front hit");
+                floor.cleanPooler();
+                SceneManager.LoadScene("StartMenuScene");
             }
         }
     }

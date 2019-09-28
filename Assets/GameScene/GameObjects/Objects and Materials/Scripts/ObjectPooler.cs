@@ -21,31 +21,28 @@ public class ObjectPooler  {
 
     public void setCoinGameObject(GameObject coin) {
         GameObject coinHolder = new GameObject("CoinHolder");
-   
-
-        for (int i = 0; i <20; i++) {
-            GameObject temp = (GameObject)MonoBehaviour.Instantiate(coin);
+        for (int i = 0; i <200; i++) {
+            GameObject temp = (GameObject) MonoBehaviour.Instantiate(coin);
             temp.SetActive(false);
             coinList.Add(temp);
-          
             temp.transform.parent = coinHolder.transform;
         }
     }
+
     public void setFloorGameObject(GameObject floor) {
         GameObject floorHolder = new GameObject("Floor Holder");
-
-        for (int i = 0; i < 600; i++) {
-            GameObject temp = (GameObject)MonoBehaviour.Instantiate(floor);
+        for (int i = 0; i < 200; i++) {
+            GameObject temp = (GameObject) MonoBehaviour.Instantiate(floor);
             temp.SetActive(false);
             floorList.Add(temp);
             temp.transform.parent = floorHolder.transform;
         }
     }
+
     public void setObstacleGameObject(GameObject obstacle) {
         GameObject obstacleHolder = new GameObject("Obstacle Holder");
-
         for (int i = 0; i < 50; i++) {   
-            GameObject temp = (GameObject)MonoBehaviour.Instantiate(obstacle);
+            GameObject temp = (GameObject) MonoBehaviour.Instantiate(obstacle);
             temp.SetActive(false);
             obstacleList.Add(temp);
             temp.transform.parent = obstacleHolder.transform;
@@ -82,7 +79,11 @@ public class ObjectPooler  {
         return null;
     }
 
-    
+    public void kill() {
+        coinList.Clear();
+        floorList.Clear();
+        obstacleList.Clear();
+    }
 
 
 }
