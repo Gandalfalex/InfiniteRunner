@@ -7,16 +7,16 @@
  */
 public class Groundgenerator {
 
-    Vector3 obstacle_scale;
+    Vector3 floor_Scale;
 
 
     private int noObstacle_x;
     private int obstacles_z_start;
     private int obstacles_z_end;
 
-    private int coinSpawn;
+    private int coinSpawn = 0;
     private int coinSpawn_position;
-    private int noCoin = 5;
+   // private int noCoin = 5;
 
     public int size = 30;
     private float[] positions;
@@ -30,22 +30,23 @@ public class Groundgenerator {
 
     /*Sets up random vars to generate the level
      */
-    public Groundgenerator(float[] positions, GameObject floor, GameObject obstacle, GameObject coin) {
-        this.obstacle_scale = floor.transform.localScale;
-        this.positions = positions;
+    public Groundgenerator(GameObject[] gameObjects) {
+
+        foreach (GameObject gObject in gameObjects) {
+            if (gObject.GetComponent<ObjectStatsInterface>().getType().Equals(ItemTypes.FLOOR)) {
+                floor_Scale = gObject.transform.localScale;
+                positions = fillPositionsArray(floor_Scale.x);   
+            }
+        }
+        god = ObjectPooler.instance;
+        god.setGameObjects(gameObjects);
 
         noObstacle_x = Random.Range(0, positions.Length);
         obstacles_z_start = Random.Range(6, 10);
         obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
 
-
         coinSpawn = Random.Range(7, 11);
         coinSpawn_position = Random.Range(0, positions.Length);
-
-        god = ObjectPooler.instance;
-        god.setCoinGameObject(coin);
-        god.setFloorGameObject(floor);
-        god.setObstacleGameObject(obstacle);
     }
 
     
@@ -65,13 +66,13 @@ public class Groundgenerator {
             int iScaler = i + lastPositionOfObject;
             
             foreach (float pos in positions) {
-                handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * obstacle_scale.z));
+                handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * floor_Scale.z));
             }
            
             if( i >= obstacles_z_start && i < obstacles_z_end) {
                 foreach (float pos in positions) {
                     if (pos != positions[noObstacle_x]) {
-                        handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, iScaler * obstacle_scale.z));
+                        handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, iScaler * floor_Scale.z));
                     }
                 }
             }
@@ -94,13 +95,13 @@ public class Groundgenerator {
         int offset = 2;
 
         foreach (float pos in positions) {
-            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * obstacle_scale.z));
+            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z));
         }
 
         if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
             foreach (float pos in positions) {
                 if (pos != positions[noObstacle_x]) {
-                    handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, lastPositionOfObject * obstacle_scale.z));
+                    handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, lastPositionOfObject * floor_Scale.z));
                 }
             }
         }
@@ -113,7 +114,7 @@ public class Groundgenerator {
 
 
         if(lastPositionOfObject + offset < obstacles_z_start) {
-           handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * obstacle_scale.z));
+           handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * floor_Scale.z));
         }
 
         lastPositionOfObject ++;
@@ -133,13 +134,20 @@ public class Groundgenerator {
         }
     }
 
-
-
-
     /* sets the objectpooler to default
      */
     public void destroyObjectPooler() {
         god.kill();
     }
 
+
+    private float[] fillPositionsArray(float localScale_x) {
+        float[] positions = new float[3];
+        int pos = 0;
+        for (float depth = -localScale_x; depth <= localScale_x; depth += localScale_x) {
+            positions[pos] = depth;
+            pos++;
+        }
+        return positions;
+    }
 }

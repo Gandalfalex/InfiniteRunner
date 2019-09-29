@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7092679510662022928}
   - component: {fileID: 8077440134277649337}
   - component: {fileID: 1943028014288898790}
-  - component: {fileID: 8974853824690377282}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -94,18 +93,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &8974853824690377282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 740977039928878182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd6e9108537f868408cafefad70f3d50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3563428551536255054
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +104,7 @@ GameObject:
   - component: {fileID: 4855640825036499384}
   - component: {fileID: -7752986153764987507}
   - component: {fileID: 8250716557716763497}
+  - component: {fileID: -2108594339654673427}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -165,5 +153,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb6f26e34c802694caf39c9d4dc469eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2108594339654673427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3563428551536255054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 294febab8c9392346afa67809613bc2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

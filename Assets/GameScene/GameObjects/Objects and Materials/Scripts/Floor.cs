@@ -1,41 +1,34 @@
 ﻿using UnityEngine;
 
-public class Floor {
+public class Floor: MonoBehaviour {
 
   
     private Groundgenerator groundgenerator;
-    private bool stopGenerating = false;
+    
+    [SerializeField]
+    private GameObject[] gameObjects;
+    [SerializeField]
+    private Transform playerPosition;
+
+    private Vector3 floorScale;
    
-
-    public void generateFloor(GameObject block, GameObject obstacle, GameObject coin, int spherePosition) {
-       
-        groundgenerator = new Groundgenerator(fillPositionsArray(obstacle.transform.localScale.x), block, obstacle, coin);
-        groundgenerator.generateLevel();
-       
-    }
-
-
-
-    private float[] fillPositionsArray(float localScale_x) {
-        float[] positions = new float[3];
-        int pos = 0;
-        for (float depth = -localScale_x; depth <= localScale_x; depth += localScale_x) {
-            positions[pos] = depth;
-            pos++;
+    private void Awake() {
+        groundgenerator = new Groundgenerator(gameObjects);
+        foreach(GameObject game in gameObjects) {
+            if (game.GetComponent<ObjectStatsInterface>().getType().Equals(ItemTypes.FLOOR)) {
+                floorScale = game.transform.localScale;
+            }
         }
-        return positions;
+        groundgenerator.generateLevel();
     }
-
-
-
 
 
     /* if the distance between the player and the last active object is less then 10
      * then !stopGenerating 
      * else start generating the new level
      */
-    public void UpdateLevel(float spherePosition_z, float localScale_z) {
-        if (groundgenerator.getLastPosition() * localScale_z - spherePosition_z < 200){
+   void Update() {
+        if (groundgenerator.getLastPosition() * floorScale.z - transform.position.z < 200){
             groundgenerator.UpdateAtRuntime();  
         }
     }

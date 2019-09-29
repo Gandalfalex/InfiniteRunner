@@ -21,10 +21,11 @@ public class BlockDestroy : MonoBehaviour
     }
 
     void Update(){
-
+       
         if (Time.time - time > 1) {
+            
             time = Time.time;
-            player = GameObject.Find("Sphere");
+            player = GameObject.Find("Player");
             if (transform.position.z < player.transform.position.z - 20) {
                 gameObject.SetActive(false);
             }

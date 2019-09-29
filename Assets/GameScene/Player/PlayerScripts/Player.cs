@@ -4,7 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour{
 
-  
+    [SerializeField]
+    private Transform floorTransform;
+    [SerializeField]
+    public GameObject cam;
+
     public bool boosted;
  
     public float speedForward;
@@ -12,21 +16,17 @@ public class Player : MonoBehaviour{
     private PlayerStatEnum playerStats;
     private PlayerManager manager = PlayerManager.Instance;
     private PlayerMovePosition move = new PlayerMovePosition();
-    
-    public GameObject block;
-    public GameObject obstacle;
-    public GameObject coin;
-    public GameObject cam;
+
 
     public Vector3 offset;
     float lastClick;
 
 
-    public int coins;
-
     
 
-    private Floor floor = new Floor();
+
+    public int coins;
+
     private bool blocked;
     private float startpoint;
     private float directionRaw;
@@ -35,20 +35,14 @@ public class Player : MonoBehaviour{
     void Start(){
         Debug.Log(Screen.currentResolution);
         boosted = false;
-        floor.generateFloor(block,obstacle, coin, (int)transform.position.x);
         manager.setCoins(0);
         offset = cam.transform.position - transform.position;
         move.setSpeed(20);
     }
 
-
-    public void setUp() {
-        Start();
-    }
     void FixedUpdate(){
         
         if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
-            floor.UpdateLevel(transform.position.z, block.transform.localScale.z);
             transform.position = move.moveDirection_z(transform.position);
 
             if (move.getMotion()) {
@@ -57,7 +51,7 @@ public class Player : MonoBehaviour{
 
             if (Input.GetKey("a") || Input.GetKey("d")) {
                 float dirct = Input.GetAxisRaw("Horizontal");
-                move.firstMotion(transform.position, (dirct * block.transform.localScale.x));
+                move.firstMotion(transform.position, (dirct * floorTransform.localScale.x));
             }
           
            else if(Input.touchCount>0) {
@@ -73,7 +67,7 @@ public class Player : MonoBehaviour{
                     blocked = true;
                     directionRaw = touch.position.x - startpoint;
                     float temp = directionRaw / Mathf.Abs(directionRaw);
-                    move.firstMotion(transform.position, (temp * block.transform.localScale.x));
+                    move.firstMotion(transform.position, (temp * floorTransform.localScale.x));
                 }
            }
         }
@@ -112,7 +106,6 @@ public class Player : MonoBehaviour{
                 PlayerManager manager = PlayerManager.Instance;
                 manager.setPlayerEnum(PlayerStatEnum.DEAD);
                 Debug.Log("front hit");
-                floor.cleanPooler();
                 SceneManager.LoadScene("StartMenuScene");
             }
         }

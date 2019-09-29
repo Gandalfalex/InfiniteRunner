@@ -3,11 +3,7 @@ using UnityEngine;
 
 public class ObjectPooler  {
 
-
-    private List<GameObject> coinList = new List<GameObject>();
-    private List<GameObject> floorList = new List<GameObject>();
-    private List<GameObject> obstacleList = new List<GameObject>();
-
+    private Dictionary<ItemTypes, List<GameObject>> itemDictionary = new Dictionary<ItemTypes, List<GameObject>>();
 
 
     public static ObjectPooler instance {
@@ -18,61 +14,35 @@ public class ObjectPooler  {
 
 
     private ObjectPooler() { }
+ 
 
-    public void setCoinGameObject(GameObject coin) {
-        GameObject coinHolder = new GameObject("CoinHolder");
-        for (int i = 0; i <200; i++) {
-            GameObject temp = (GameObject) MonoBehaviour.Instantiate(coin);
-            temp.SetActive(false);
-            coinList.Add(temp);
-            temp.transform.parent = coinHolder.transform;
+    public void setGameObjects(GameObject[] gameObjects) {
+        foreach (GameObject item in gameObjects) {  
+            ObjectStatsInterface tempInterface = item.GetComponent<ObjectStatsInterface>();
+            GameObject itemHolder = new GameObject(tempInterface.getType().ToString());
+            for (int i = 0; i < tempInterface.getRecommendedListSize(); i++) {
+                GameObject temp = (GameObject) MonoBehaviour.Instantiate(item);
+                temp.SetActive(false);
+                if (itemDictionary.ContainsKey(tempInterface.getType())) {
+                    itemDictionary[tempInterface.getType()].Add(temp);
+                }
+                else {
+                    List<GameObject> tempList = new List<GameObject>();
+                    tempList.Add(temp);
+                    itemDictionary.Add(tempInterface.getType(), tempList);
+                }
+                temp.transform.parent = itemHolder.transform;
+            }
         }
     }
-
-    public void setFloorGameObject(GameObject floor) {
-        GameObject floorHolder = new GameObject("Floor Holder");
-        for (int i = 0; i < 200; i++) {
-            GameObject temp = (GameObject) MonoBehaviour.Instantiate(floor);
-            temp.SetActive(false);
-            floorList.Add(temp);
-            temp.transform.parent = floorHolder.transform;
-        }
-    }
-
-    public void setObstacleGameObject(GameObject obstacle) {
-        GameObject obstacleHolder = new GameObject("Obstacle Holder");
-        for (int i = 0; i < 50; i++) {   
-            GameObject temp = (GameObject) MonoBehaviour.Instantiate(obstacle);
-            temp.SetActive(false);
-            obstacleList.Add(temp);
-            temp.transform.parent = obstacleHolder.transform;
-        }
-    }
-
-
-
 
 
     public GameObject getOutOfObjectPool(ItemTypes item) {
 
-        if (item.Equals(ItemTypes.FLOOR)) {
-            for (int i = 0; i < floorList.Count; i++) {
-                if (!floorList[i].activeInHierarchy) { 
-                    return floorList[i];
-                }
-            }
-        }
-        else if (item.Equals(ItemTypes.COIN)) {
-            for (int i = 0; i < coinList.Count; i++) {
-                if (!coinList[i].activeInHierarchy) {
-                    return coinList[i];
-                }
-            }
-        }
-        else if (item.Equals(ItemTypes.OBSTACLE)) {
-            for (int i = 0; i < obstacleList.Count; i++) {
-                if (!obstacleList[i].activeInHierarchy) {
-                    return obstacleList[i];
+        if (itemDictionary.ContainsKey(item)) {
+            foreach (GameObject game in itemDictionary[item]) {
+                if (!game.activeInHierarchy) {
+                    return game;
                 }
             }
         }
@@ -80,10 +50,6 @@ public class ObjectPooler  {
     }
 
     public void kill() {
-        coinList.Clear();
-        floorList.Clear();
-        obstacleList.Clear();
+        itemDictionary.Clear();
     }
-
-
 }
