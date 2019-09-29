@@ -1,3 +1,3 @@
 ﻿public enum ItemTypes {
-    COIN, FLOOR, OBSTACLE
+    COIN, FLOOR, OBSTACLE, TUNNEL
 } 

@@ -42,6 +42,12 @@ public class ObjectPooler  {
         if (itemDictionary.ContainsKey(item)) {
             foreach (GameObject game in itemDictionary[item]) {
                 if (!game.activeInHierarchy) {
+                    try {
+                        game.GetComponent<Rigidbody>().useGravity = false;
+                        game.GetComponent<Rigidbody>().isKinematic = true;
+                    }
+                    catch { }
+
                     return game;
                 }
             }

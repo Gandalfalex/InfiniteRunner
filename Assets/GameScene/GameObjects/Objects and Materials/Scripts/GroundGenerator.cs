@@ -70,6 +70,7 @@ public class Groundgenerator {
             }
            
             if( i >= obstacles_z_start && i < obstacles_z_end) {
+               
                 foreach (float pos in positions) {
                     if (pos != positions[noObstacle_x]) {
                         handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, iScaler * floor_Scale.z));
@@ -91,17 +92,24 @@ public class Groundgenerator {
      */
     public void UpdateAtRuntime() {
         int heigh = 1;
+        int tunnelHight = 3;
         int low = 0;
         int offset = 2;
 
         foreach (float pos in positions) {
-            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z));
+            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z), false);
         }
-
+        
         if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
-            foreach (float pos in positions) {
-                if (pos != positions[noObstacle_x]) {
-                    handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, lastPositionOfObject * floor_Scale.z));
+            if (positions[noObstacle_x] == 0) {
+                handleObjects(ItemTypes.TUNNEL, new Vector3(0, tunnelHight, lastPositionOfObject * floor_Scale.z));
+            }
+            else {
+                foreach (float pos in positions) {
+
+                    if (pos != positions[noObstacle_x]) {
+                        handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, lastPositionOfObject * floor_Scale.z));
+                    }
                 }
             }
         }
@@ -109,7 +117,7 @@ public class Groundgenerator {
             obstacles_z_start = lastPositionOfObject + Random.Range(6, 10);
             obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
             noObstacle_x = Random.Range(0, positions.Length);
-            coinSpawn_position =Random.Range(0, positions.Length);
+            coinSpawn_position = Random.Range(0, positions.Length);
         }
 
 
@@ -123,14 +131,22 @@ public class Groundgenerator {
 
     /* activates new Prefabs, sets them active
      */
-    public void handleObjects(ItemTypes item, Vector3 position) {
-
+     public void handleObjects(ItemTypes item, Vector3 position, bool fallDown) {
         GameObject temp = god.getOutOfObjectPool(item);
-       
+        if (temp != null) {
+            temp.SetActive(true);
+            temp.GetComponent<Rigidbody>().useGravity = fallDown;
+            temp.GetComponent<Rigidbody>().isKinematic = !fallDown;
+            temp.transform.position = position;
+            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
+    public void handleObjects(ItemTypes item, Vector3 position) {
+        GameObject temp = god.getOutOfObjectPool(item);
         if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
-            temp.transform.rotation = Quaternion.Euler(0,0,0);
+            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 

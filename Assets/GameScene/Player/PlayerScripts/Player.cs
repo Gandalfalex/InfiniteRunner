@@ -38,6 +38,7 @@ public class Player : MonoBehaviour{
         manager.setCoins(0);
         offset = cam.transform.position - transform.position;
         move.setSpeed(20);
+        FindObjectOfType<Soundmanager>().playAudio("mainTheme");
     }
 
     void FixedUpdate(){
@@ -73,9 +74,9 @@ public class Player : MonoBehaviour{
         }
         speedForward = move.getSpeed();
 
-        if(transform.position.y < -2) {
-            transform.position = new Vector3(transform.position.x, 4, transform.position.z);
-            
+        if(transform.position.y < - 2) {
+            manager.setPlayerEnum(PlayerStatEnum.DEAD);
+ 
         }
         handleCamMovement();
     }
@@ -88,12 +89,15 @@ public class Player : MonoBehaviour{
 
     void OnCollisionEnter(Collision col) {
 
-        if (col.gameObject.gameObject.name.Equals("Coin(Clone)")) {
+        ItemTypes itemType = col.gameObject.GetComponent<ObjectStatsInterface>().getType();
+        
+        if (itemType.Equals(ItemTypes.COIN)) {
+            Debug.Log(col.gameObject.GetComponent<CoinInterface>().getValue());
             manager.incCoins();
             col.gameObject.gameObject.SetActive(false);
         }
-        else if (col.gameObject.name.Equals("Obstacles(Clone)")) {
-            Debug.Log("hit");
+        else if (!itemType.Equals(ItemTypes.FLOOR)) {
+           
             HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
                 Debug.Log(" site hit");
