@@ -16,7 +16,7 @@ public class InGameGuiManager : MonoBehaviour {
         slider.maxValue = 1f;
     }
     void FixedUpdate() {
-        float coins = (float)manager.getCoins() / 10;
+        float coins = (float)manager.getCoins() / 20;
         slider.value = coins;
     }
 

@@ -2529,11 +2529,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - audio: {fileID: 0}
-    clip: {fileID: 8300000, guid: 37e8ef3d5293803408d7faedcf0856be, type: 3}
-    name: mainTheme
-    volume: 0.357
-    pitch: 0.372
+  - audioSource: {fileID: 0}
+    clip: {fileID: 8300000, guid: 0f7d8dca76033c84c86691ef4e671682, type: 3}
+    name: Hit
+    volume: 1
+    pitch: 1
+    soundType: 3
+  - audioSource: {fileID: 0}
+    clip: {fileID: 8300000, guid: 0f7d8dca76033c84c86691ef4e671682, type: 3}
+    name: Hit2
+    volume: 1
+    pitch: 0.75
+    soundType: 3
 --- !u!4 &2086575290
 Transform:
   m_ObjectHideFlags: 0

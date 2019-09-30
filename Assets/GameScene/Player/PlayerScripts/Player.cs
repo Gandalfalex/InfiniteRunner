@@ -17,13 +17,8 @@ public class Player : MonoBehaviour{
     private PlayerManager manager = PlayerManager.Instance;
     private PlayerMovePosition move = new PlayerMovePosition();
 
-
     public Vector3 offset;
     float lastClick;
-
-
-    
-
 
     public int coins;
 
@@ -38,7 +33,6 @@ public class Player : MonoBehaviour{
         manager.setCoins(0);
         offset = cam.transform.position - transform.position;
         move.setSpeed(20);
-        FindObjectOfType<Soundmanager>().playAudio("mainTheme");
     }
 
     void FixedUpdate(){
@@ -81,23 +75,22 @@ public class Player : MonoBehaviour{
         handleCamMovement();
     }
 
-    
-
-
-
-    
-
     void OnCollisionEnter(Collision col) {
 
         ItemTypes itemType = col.gameObject.GetComponent<ObjectStatsInterface>().getType();
         
         if (itemType.Equals(ItemTypes.COIN)) {
-            Debug.Log(col.gameObject.GetComponent<CoinInterface>().getValue());
-            manager.incCoins();
+
             col.gameObject.gameObject.SetActive(false);
-        }
-        else if (!itemType.Equals(ItemTypes.FLOOR)) {
            
+            col.gameObject.SetActive(false);
+            Debug.Log("playingSound " + manager.getCoins());
+            manager.incCoins();
+            FindObjectOfType<Soundmanager>().playAudio("Hit", manager.getCoins());
+        }
+
+
+        else if (!itemType.Equals(ItemTypes.FLOOR)) {
             HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
                 Debug.Log(" site hit");
@@ -135,7 +128,6 @@ public class Player : MonoBehaviour{
             duration += Time.deltaTime;
             yield return null;
         }
-
         handleCamMovement();
     }
         

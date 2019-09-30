@@ -67,6 +67,7 @@ public class Groundgenerator {
             
             foreach (float pos in positions) {
                 handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * floor_Scale.z));
+                handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position], heigh, iScaler * floor_Scale.z));
             }
            
             if( i >= obstacles_z_start && i < obstacles_z_end) {
