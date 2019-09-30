@@ -12,7 +12,8 @@ public class PlayerMovePosition {
 
     private bool inMotion;
     private bool activated;
-    private float speedForward = 9;
+    private float speedForward;
+    private int speedLR = 15;
     private bool siteHit;
 
     private float dest;
@@ -56,7 +57,7 @@ public class PlayerMovePosition {
 
             Vector3 nextPosition = player;
             nextPosition.x = dest;
-            return Vector3.Lerp(player, nextPosition, 3 * Time.deltaTime);
+            return Vector3.Lerp(player, nextPosition, speedLR * Time.deltaTime);
          }
         return player;
     }
@@ -79,7 +80,7 @@ public class PlayerMovePosition {
                 Vector3 nextPosition = player;
                 nextPosition.x = dest;
 
-                return Vector3.Lerp(player, nextPosition, speedForward * Time.deltaTime);
+                return Vector3.Lerp(player, nextPosition, speedLR * Time.deltaTime);
             } 
         }
         else if (siteHit){

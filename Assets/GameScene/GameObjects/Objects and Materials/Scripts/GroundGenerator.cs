@@ -18,7 +18,7 @@ public class Groundgenerator {
     private int coinSpawn_position;
    // private int noCoin = 5;
 
-    public int size = 30;
+    public int size = 10;
     private float[] positions;
     private int lastPositionOfObject = 0;
 
@@ -67,7 +67,6 @@ public class Groundgenerator {
             
             foreach (float pos in positions) {
                 handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * floor_Scale.z));
-                handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position], heigh, iScaler * floor_Scale.z));
             }
            
             if( i >= obstacles_z_start && i < obstacles_z_end) {
@@ -98,7 +97,7 @@ public class Groundgenerator {
         int offset = 2;
 
         foreach (float pos in positions) {
-            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z), false);
+            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z));
         }
         
         if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
@@ -132,22 +131,17 @@ public class Groundgenerator {
 
     /* activates new Prefabs, sets them active
      */
-     public void handleObjects(ItemTypes item, Vector3 position, bool fallDown) {
-        GameObject temp = god.getOutOfObjectPool(item);
-        if (temp != null) {
-            temp.SetActive(true);
-            temp.GetComponent<Rigidbody>().useGravity = fallDown;
-            temp.GetComponent<Rigidbody>().isKinematic = !fallDown;
-            temp.transform.position = position;
-            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-    }
     public void handleObjects(ItemTypes item, Vector3 position) {
         GameObject temp = god.getOutOfObjectPool(item);
-        if (temp != null) {
+        if (temp != null && !item.Equals(ItemTypes.COIN)) {
             temp.SetActive(true);
             temp.transform.position = position;
-            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
+            temp.transform.rotation = Quaternion.identity;
+        }
+        else if(temp != null && item.Equals(ItemTypes.COIN)) {
+            temp.SetActive(true);
+            temp.transform.position = position;
+            temp.transform.rotation = Quaternion.Euler(0,0,0);
         }
     }
 

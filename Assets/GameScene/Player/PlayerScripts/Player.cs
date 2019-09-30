@@ -6,21 +6,18 @@ public class Player : MonoBehaviour{
 
     [SerializeField]
     private Transform floorTransform;
-    [SerializeField]
+   
     public GameObject cam;
+    public Vector3 offset;
+    public Vector3 rotation;
 
-    public bool boosted;
- 
     public float speedForward;
 
     private PlayerStatEnum playerStats;
     private PlayerManager manager = PlayerManager.Instance;
     private PlayerMovePosition move = new PlayerMovePosition();
 
-    public Vector3 offset;
-    float lastClick;
-
-    public int coins;
+ 
 
     private bool blocked;
     private float startpoint;
@@ -29,14 +26,19 @@ public class Player : MonoBehaviour{
 
     void Start(){
         Debug.Log(Screen.currentResolution);
-        boosted = false;
         manager.setCoins(0);
-        offset = cam.transform.position - transform.position;
-        move.setSpeed(20);
+        move.setSpeed(speedForward);
+        cam.transform.position = offset;
+        cam.transform.rotation = Quaternion.Euler(rotation);
     }
 
     void FixedUpdate(){
-        
+
+
+
+        cam.transform.position = offset;
+        cam.transform.rotation = Quaternion.Euler(rotation);
+
         if (!manager.getPlayerEnum().Equals(PlayerStatEnum.PAUSED)) {
             transform.position = move.moveDirection_z(transform.position);
 
@@ -75,21 +77,22 @@ public class Player : MonoBehaviour{
         handleCamMovement();
     }
 
+
     void OnCollisionEnter(Collision col) {
 
         ItemTypes itemType = col.gameObject.GetComponent<ObjectStatsInterface>().getType();
-        
+
         if (itemType.Equals(ItemTypes.COIN)) {
-
-            col.gameObject.gameObject.SetActive(false);
+            
+            if (col.gameObject.activeInHierarchy) {
+                col.gameObject.SetActive(false);
+                manager.incCoins();
+                Debug.Log(manager.getCoins() +" " + col.gameObject.GetComponent<CoinInterface>().getValue()) ;
+                FindObjectOfType<Soundmanager>().playAudio("Hit", manager.getCoins());
+                return;
+            } 
            
-            col.gameObject.SetActive(false);
-            Debug.Log("playingSound " + manager.getCoins());
-            manager.incCoins();
-            FindObjectOfType<Soundmanager>().playAudio("Hit", manager.getCoins());
         }
-
-
         else if (!itemType.Equals(ItemTypes.FLOOR)) {
             HitDirection hit =  move.workWithCollision(transform.position, col.contacts[0].point, col.gameObject.transform.position, col.gameObject.transform.localScale.x);
             if (hit.Equals(HitDirection.SITE)) {
