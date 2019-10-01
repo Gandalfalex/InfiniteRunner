@@ -2,6 +2,10 @@
 
 
 public class ObstacleInformationHolder : MonoBehaviour, ObjectStatsInterface {
+    public ObjectClass getObjectClass() {
+        return ObjectClass.OBSTACLE;
+    }
+
     public int getRecommendedListSize() {
         return 50;
     }

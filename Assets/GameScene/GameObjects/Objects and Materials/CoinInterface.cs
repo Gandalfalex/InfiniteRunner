@@ -5,4 +5,6 @@ using UnityEngine;
 public interface CoinInterface : ObjectStatsInterface {
 
     int getValue();
+
+    void setValue(int newValue);
 }

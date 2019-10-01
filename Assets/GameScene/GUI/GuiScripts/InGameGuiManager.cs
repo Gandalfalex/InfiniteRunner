@@ -7,16 +7,19 @@ public class InGameGuiManager : MonoBehaviour {
     public Slider slider;
     public GameObject panelInGame;
     public GameObject panelPausedGame;
+    private int lastCoinCount;
+
+    public int coinsToFillSlider;
 
     private void Awake() {
         panelInGame.SetActive(true);
         panelPausedGame.SetActive(false);
-    }
-    private void Start() {
         slider.maxValue = 1f;
     }
+
     void FixedUpdate() {
-        float coins = (float)manager.getCoins() / 20;
+        float temp = manager.getCoins() - lastCoinCount;
+        float coins = (float)(temp / coinsToFillSlider);
         slider.value = coins;
     }
 
@@ -24,8 +27,10 @@ public class InGameGuiManager : MonoBehaviour {
 
     public void activateBoost() {
         Debug.Log("clearing the way");
-        manager.setCoins(0);
-        manager.setPlayerEnum(PlayerStatEnum.BOOSTED);
+        if((manager.getCoins() - lastCoinCount) / coinsToFillSlider == 1) {
+            manager.setPlayerEnum(PlayerStatEnum.BOOSTED);
+            lastCoinCount = manager.getCoins();
+        }
     }
 
 

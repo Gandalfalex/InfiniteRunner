@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface ObjectStatsInterface{
+﻿public interface ObjectStatsInterface{
     ItemTypes getType();
     int getRecommendedListSize();
-
+    ObjectClass getObjectClass();
 }

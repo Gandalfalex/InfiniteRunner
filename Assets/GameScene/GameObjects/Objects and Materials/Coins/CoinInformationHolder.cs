@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
 
 public class CoinInformationHolder : MonoBehaviour, CoinInterface{
-    private int value;
+    private int value = 1;
 
-    private void Awake() {
-        value = Random.Range(1, 5);
-    }
-
+   
     public int getRecommendedListSize() {
-        return 100;
+        return 50;
     }
 
     public int getValue() {
@@ -19,6 +16,20 @@ public class CoinInformationHolder : MonoBehaviour, CoinInterface{
         return ItemTypes.COIN;
     }
 
+    public void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag.Equals("Player")) {
+            PlayerManager.Instance.incCoins();
+            gameObject.SetActive(false);
+            FindObjectOfType<Soundmanager>().playAudio("Hit", PlayerManager.Instance.getCoins());
+            value = Random.Range(1, 5);
+        }
+    }
 
-    
+    public void setValue(int newValue) {
+        value = newValue;
+    }
+
+    public ObjectClass getObjectClass() {
+        return ObjectClass.NOT_INTERESSTING;
+    }
 }

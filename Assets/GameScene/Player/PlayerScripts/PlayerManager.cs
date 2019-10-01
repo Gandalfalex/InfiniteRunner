@@ -1,4 +1,5 @@
-﻿public sealed class PlayerManager{
+﻿
+public sealed class PlayerManager{
     private PlayerManager() { }
         
 

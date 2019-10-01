@@ -25,9 +25,6 @@ public class PlayerMovePosition {
         return inMotion;
     }
 
-    public bool getSiteHit() {
-        return siteHit;
-    }
     public void setSiteHit(bool hit) {
         this.siteHit = hit;
     }
@@ -66,20 +63,15 @@ public class PlayerMovePosition {
      */
     public Vector3 moveToFinalPosition(Vector3 player) {
         if (inMotion && !siteHit) {
-           
             if (Mathf.Abs(dest - player.x) <= 0.05f) {
                 Vector3 nextPosition = player;
                 nextPosition.x = dest;
-
                 inMotion = false;
-              
-
                 return nextPosition;
             }
             else if (player.x != dest) {
                 Vector3 nextPosition = player;
                 nextPosition.x = dest;
-
                 return Vector3.Lerp(player, nextPosition, speedLR * Time.deltaTime);
             } 
         }
@@ -93,9 +85,13 @@ public class PlayerMovePosition {
     /* calculates and increments the forward speed.
      */
     public Vector3 moveDirection_z(Vector3 player) {
-        float tempspeed = speedForward + (float)(player.z / 500);
-        Vector3 moveForward = new Vector3(player.x, player.y, player.z + speedForward * Time.deltaTime);
+        float tempspeed = speedForward + (float)(player.z / 100);
+        if (tempspeed % 2 == 0) {
+            Debug.Log(tempspeed);
+        }
+        Vector3 moveForward = new Vector3(player.x, player.y, player.z + tempspeed * Time.deltaTime);
         return moveForward;
+       
     }
 
 

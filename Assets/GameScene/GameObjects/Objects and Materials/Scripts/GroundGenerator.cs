@@ -94,12 +94,12 @@ public class Groundgenerator {
         int heigh = 1;
         int tunnelHight = 3;
         int low = 0;
-        int offset = 2;
 
         foreach (float pos in positions) {
             handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z));
         }
-        
+        handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position], heigh, lastPositionOfObject * floor_Scale.z));
+
         if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
             if (positions[noObstacle_x] == 0) {
                 handleObjects(ItemTypes.TUNNEL, new Vector3(0, tunnelHight, lastPositionOfObject * floor_Scale.z));
@@ -121,9 +121,9 @@ public class Groundgenerator {
         }
 
 
-        if(lastPositionOfObject + offset < obstacles_z_start) {
-           handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * floor_Scale.z));
-        }
+        //if(lastPositionOfObject + offset < obstacles_z_start) {
+        //   handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * floor_Scale.z));
+      //  }
 
         lastPositionOfObject ++;
     }
