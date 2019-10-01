@@ -30,6 +30,7 @@ public class Player : MonoBehaviour{
         move.setSpeed(speedForward);
         cam.transform.position = offset;
         cam.transform.rotation = Quaternion.Euler(rotation);
+        FindObjectOfType<Soundmanager>().playAudio("background");
     }
 
     void FixedUpdate(){

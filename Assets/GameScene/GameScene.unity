@@ -2574,9 +2574,24 @@ MonoBehaviour:
   - audioSource: {fileID: 0}
     clip: {fileID: 8300000, guid: 0f7d8dca76033c84c86691ef4e671682, type: 3}
     name: Hit
-    volume: 0.225
-    pitch: 1
+    volume: 0.355
+    pitch: 3
+    loop: 0
     soundType: 3
+  - audioSource: {fileID: 0}
+    clip: {fileID: 8300000, guid: f993805ddaa4f6b45b3708b2ffd58e2b, type: 3}
+    name: background
+    volume: 0.262
+    pitch: 1
+    loop: 1
+    soundType: 0
+  - audioSource: {fileID: 0}
+    clip: {fileID: 8300000, guid: d26cbeb6f292d264988316e3b7778a56, type: 3}
+    name: playerDeath
+    volume: 0.558
+    pitch: 1
+    loop: 0
+    soundType: 2
 --- !u!4 &2086575290
 Transform:
   m_ObjectHideFlags: 0

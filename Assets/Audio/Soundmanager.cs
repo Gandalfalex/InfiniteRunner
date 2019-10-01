@@ -25,13 +25,15 @@ public class Soundmanager : MonoBehaviour{
         Sound temp = Array.Find(sounds, sound => sound.name == name);
         if (temp != null) {
             temp.audioSource.Play();
+            temp.audioSource.loop = temp.loop;
+      
         }
     }
 
     public void playAudio(string name, int i) {
         Sound temp = Array.Find(sounds, sound => sound.name == name);
         if (temp != null) {
-            temp.audioSource.pitch = 1 -(float)i / 20;
+            temp.audioSource.pitch = temp.pitch -(float)i / 20;
 
             temp.audioSource.Play();
            // yield return new WaitForSeconds(1.5f);
