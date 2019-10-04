@@ -19,7 +19,7 @@ public class Floor: MonoBehaviour {
                 floorScale = game.transform.localScale;
             }
         }
-        groundgenerator.generateLevel();
+        groundgenerator.GenerateLevel();
     }
 
 
@@ -28,13 +28,13 @@ public class Floor: MonoBehaviour {
      * else start generating the new level
      */
    void Update() {
-        if (groundgenerator.getLastPosition() * floorScale.z - transform.position.z < 200){
+        if (groundgenerator.GetLastPosition() * floorScale.z - transform.position.z < 200){
             groundgenerator.UpdateAtRuntime();  
         }
     }
 
-    public void cleanPooler() {
-        groundgenerator.destroyObjectPooler();
+    public void CleanPooler() {
+        groundgenerator.DestroyObjectPooler();
     }
 
 }

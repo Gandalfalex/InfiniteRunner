@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 
 
@@ -10,77 +11,59 @@ public class Groundgenerator {
     Vector3 floor_Scale;
 
 
-    private int noObstacle_x;
     private int obstacles_z_start;
     private int obstacles_z_end;
+    private int leftOrRightSite;
 
-    private int coinSpawn = 0;
     private int coinSpawn_position;
-   // private int noCoin = 5;
 
     public int size = 10;
-    private float[] positions;
+    private float[] positions = new float[3];
     private int lastPositionOfObject = 0;
 
-    private bool generate;
-
     private ObjectPooler god;
-
-
+    
+    private List<KeyValuePair<ItemTypes, Vector2>> randomObjectsToSpawn = new List<KeyValuePair<ItemTypes, Vector2>>();
+    private int indexObjectToSpawn = 0;
 
     /*Sets up random vars to generate the level
      */
     public Groundgenerator(GameObject[] gameObjects) {
 
         foreach (GameObject gObject in gameObjects) {
-            if (gObject.GetComponent<ObjectStatsInterface>().getType().Equals(ItemTypes.FLOOR)) {
+            ItemTypes itemtype = gObject.GetComponent<ObjectStatsInterface>().getType();
+            if (itemtype.Equals(ItemTypes.FLOOR)) {
                 floor_Scale = gObject.transform.localScale;
-                positions = fillPositionsArray(floor_Scale.x);   
+                FillPositionsArray(floor_Scale.x);   
+            }
+            if (gObject.GetComponent<ObjectStatsInterface>().getObjectClass().Equals(ObjectClass.OBSTACLE)) {
+                KeyValuePair<ItemTypes, Vector2> temp = new KeyValuePair<ItemTypes, Vector2>(itemtype, 
+                    gObject.GetComponent<ObstacleInterface>().GetPositionAndHeight());
+
+                if (!randomObjectsToSpawn.Contains(temp)) {
+                    randomObjectsToSpawn.Add(temp);
+                }
             }
         }
         god = ObjectPooler.instance;
         god.setGameObjects(gameObjects);
-
-        noObstacle_x = Random.Range(0, positions.Length);
-        obstacles_z_start = Random.Range(6, 10);
-        obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
-
-        coinSpawn = Random.Range(7, 11);
-        coinSpawn_position = Random.Range(0, positions.Length);
+        SetNewVariables();
     }
 
     
-    public int getLastPosition() {
+    public int GetLastPosition() {
         return lastPositionOfObject;
     }
  
 
     /*Generates the first part. The rest will be generated at run time
      */
-    public void generateLevel() { 
-        int heigh = 1;
+    public void GenerateLevel() { 
         int low = 0;
-     
         for (int i = 0; i < size; i++) {
-
             int iScaler = i + lastPositionOfObject;
-            
             foreach (float pos in positions) {
-                handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * floor_Scale.z));
-            }
-           
-            if( i >= obstacles_z_start && i < obstacles_z_end) {
-               
-                foreach (float pos in positions) {
-                    if (pos != positions[noObstacle_x]) {
-                        handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, iScaler * floor_Scale.z));
-                    }
-                }
-            }
-            else if(i > obstacles_z_end) {
-                obstacles_z_start = i +  Random.Range(6, 10);
-                obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
-                noObstacle_x = Random.Range(0, positions.Length);
+                HandleObjects(ItemTypes.FLOOR, new Vector3(pos, low, iScaler * floor_Scale.z));
             }
         }
         lastPositionOfObject = size;
@@ -92,73 +75,65 @@ public class Groundgenerator {
      */
     public void UpdateAtRuntime() {
         int heigh = 1;
-        int tunnelHight = 3;
         int low = 0;
 
-        foreach (float pos in positions) {
-            handleObjects(ItemTypes.FLOOR, new Vector3(pos, low, lastPositionOfObject * floor_Scale.z));
+        for (float i = -floor_Scale.x; i <= floor_Scale.x; i+=floor_Scale.x) {
+            HandleObjects(ItemTypes.FLOOR, new Vector3(i, low, lastPositionOfObject * floor_Scale.z));
         }
-        handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position], heigh, lastPositionOfObject * floor_Scale.z));
-
+        HandleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position], heigh, lastPositionOfObject * floor_Scale.z));
+        HandleObjects(ItemTypes.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
         if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
-            if (positions[noObstacle_x] == 0) {
-                handleObjects(ItemTypes.TUNNEL, new Vector3(0, tunnelHight, lastPositionOfObject * floor_Scale.z));
-            }
-            else {
-                foreach (float pos in positions) {
-
-                    if (pos != positions[noObstacle_x]) {
-                        handleObjects(ItemTypes.OBSTACLE, new Vector3(pos, heigh, lastPositionOfObject * floor_Scale.z));
-                    }
-                }
-            }
+            KeyValuePair<ItemTypes, Vector2> temp = randomObjectsToSpawn[indexObjectToSpawn];
+            HandleObjects(temp.Key, new Vector3(temp.Value.x * floor_Scale.x * leftOrRightSite, temp.Value.y, lastPositionOfObject * floor_Scale.z)); 
         }
         else if (lastPositionOfObject > obstacles_z_end) {
-            obstacles_z_start = lastPositionOfObject + Random.Range(6, 10);
-            obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
-            noObstacle_x = Random.Range(0, positions.Length);
-            coinSpawn_position = Random.Range(0, positions.Length);
+            SetNewVariables();
         }
-
-
-        //if(lastPositionOfObject + offset < obstacles_z_start) {
-        //   handleObjects(ItemTypes.COIN, new Vector3(positions[coinSpawn_position] , heigh, lastPositionOfObject * floor_Scale.z));
-      //  }
-
         lastPositionOfObject ++;
     }
 
 
     /* activates new Prefabs, sets them active
      */
-    public void handleObjects(ItemTypes item, Vector3 position) {
+    public void HandleObjects(ItemTypes item, Vector3 position) {
         GameObject temp = god.getOutOfObjectPool(item);
-        if (temp != null && !item.Equals(ItemTypes.COIN)) {
+        if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
-            temp.transform.rotation = Quaternion.identity;
         }
-        else if(temp != null && item.Equals(ItemTypes.COIN)) {
+    }
+    public void HandleObjects(ItemTypes item, Vector3 position, int newValue) {
+        GameObject temp = god.getOutOfObjectPool(item);
+        if (temp != null && item.Equals(ItemTypes.COIN)) {
             temp.SetActive(true);
+            temp.GetComponent<CoinInterface>().setValue(newValue);
             temp.transform.position = position;
-            temp.transform.rotation = Quaternion.Euler(0,0,0);
+            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
+
     /* sets the objectpooler to default
      */
-    public void destroyObjectPooler() {
+    public void DestroyObjectPooler() {
         god.kill();
     }
 
 
-    private float[] fillPositionsArray(float localScale_x) {
-        float[] positions = new float[3];
-        int pos = 0;
-        for (float depth = -localScale_x; depth <= localScale_x; depth += localScale_x) {
-            positions[pos] = depth;
-            pos++;
-        }
-        return positions;
+    private void FillPositionsArray(float localScale_x) {
+        positions[0] = -localScale_x;
+        positions[1] = 0;
+        positions[2] = localScale_x;
+    }
+
+    private void SetNewVariables() {
+        indexObjectToSpawn = Random.Range(0, randomObjectsToSpawn.Count);
+        obstacles_z_start = lastPositionOfObject + Random.Range(6, 10);
+        obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
+        coinSpawn_position = Random.Range(0, positions.Length);
+        int temp = Random.Range(-1, 1);
+        if (temp == 0)
+            leftOrRightSite = 1;
+        else leftOrRightSite = -1;
     }
 }

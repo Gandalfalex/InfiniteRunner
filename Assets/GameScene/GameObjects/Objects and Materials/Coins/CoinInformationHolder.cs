@@ -21,7 +21,7 @@ public class CoinInformationHolder : MonoBehaviour, CoinInterface{
             PlayerManager.Instance.incCoins();
             gameObject.SetActive(false);
             FindObjectOfType<Soundmanager>().playAudio("Hit", PlayerManager.Instance.getCoins());
-            value = Random.Range(1, 5);
+            value = 0;
         }
     }
 

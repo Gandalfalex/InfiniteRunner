@@ -16,14 +16,16 @@ public class Player : MonoBehaviour{
     private PlayerManager manager = PlayerManager.Instance;
     private PlayerMovePosition move = new PlayerMovePosition();
 
- 
 
+    private Rigidbody rb;
     private bool blocked;
-    private float startpoint;
-    private float directionRaw;
+    private Vector2 startPoint;
+    private Vector2 directionRaw;
+    private Vector2 endPoint;
 
 
     private void Awake(){
+        rb = gameObject.GetComponent<Rigidbody>();
         manager.setCoins(0);
         move.setSpeed(speedForward);
         cam.transform.position = offset;
@@ -41,27 +43,33 @@ public class Player : MonoBehaviour{
             if (move.getMotion()) {
                 transform.position = move.moveToFinalPosition(transform.position);
             }
-            
+
             if (Input.GetKey("a") || Input.GetKey("d")) {
                 float dirct = Input.GetAxisRaw("Horizontal");
                 move.firstMotion(transform.position, (dirct * floorTransform.localScale.x));
             }
-            else if(Input.touchCount>0) {
+            else if (Input.GetKey(KeyCode.Space) && transform.position.y <= 1)
+                rb.velocity = (new Vector3(0,  6, 0));
+            else if (Input.touchCount > 0) {
                 Touch touch = Input.touches[0];
                 if (touch.phase.Equals(TouchPhase.Began) && !blocked) {
                     blocked = true;
-                    startpoint = touch.position.x;
+                    startPoint = touch.position;
                 }
                 else if (touch.phase.Equals(TouchPhase.Ended) && blocked) {
                     blocked = true;
-                    directionRaw = touch.position.x - startpoint;
-                    float temp = directionRaw / Mathf.Abs(directionRaw);
-                    move.firstMotion(transform.position, (temp * floorTransform.localScale.x));
+                    endPoint = touch.position;
+                    //directionRaw = touch.position - startPoint;
+                    Vector2 test = JoyStick.CalculateInput(startPoint, endPoint);
+                    //float temp = directionRaw.x / Mathf.Abs(directionRaw.x);
+                    move.firstMotion(transform.position, (test.x * floorTransform.localScale.x));
+                    Debug.Log(test);
+                    rb.velocity = (new Vector3(0, test.y * 6, 0));
                 }
             }
         }
-        if (transform.position.y < - 2) {
-            manager.setPlayerEnum(PlayerStatEnum.DEAD);
+        else {
+            manager.playerEnum = PlayerStatEnum.DEAD;
         }
     }
 
