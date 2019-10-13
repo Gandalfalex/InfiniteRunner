@@ -15,7 +15,7 @@ public class Floor: MonoBehaviour {
     private void Awake() {
         groundgenerator = new Groundgenerator(gameObjects);
         foreach(GameObject game in gameObjects) {
-            if (game.GetComponent<ObjectStatsInterface>().getType().Equals(ItemType.FLOOR)) {
+            if (game.GetComponent<ObjectStatsInterface>().GetItemType().Equals(ItemType.FLOOR)) {
                 floorScale = game.transform.localScale;
             }
         }

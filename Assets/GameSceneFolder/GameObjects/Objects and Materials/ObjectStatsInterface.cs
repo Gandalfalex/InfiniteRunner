@@ -1,5 +1,5 @@
 ﻿public interface ObjectStatsInterface{
-    ItemType getType();
-    int getRecommendedListSize();
-    ObjectClass getObjectClass();
+    ItemType GetItemType();
+    int GetRecommendedListSize();
+    ObjectClass GetObjectClass();
 }

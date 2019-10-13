@@ -4,7 +4,7 @@ public sealed class PlayerManager{
         
 
     public PlayerStatEnum playerEnum;
-    public int coins;
+    private int coins;
     public bool nearDeath = false;
     public float time;
 
@@ -46,6 +46,10 @@ public sealed class PlayerManager{
      
     public bool getNearDeath() {
         return nearDeath;
+    }
+
+    public int CoinMax() {
+        return 80;
     }
 
 }

@@ -16,20 +16,19 @@ public class ObjectPooler  {
     private ObjectPooler() { }
  
 
-    public void setGameObjects(GameObject[] gameObjects) {
+    public void SetGameObjects(GameObject[] gameObjects) {
         foreach (GameObject item in gameObjects) {  
             ObjectStatsInterface tempInterface = item.GetComponent<ObjectStatsInterface>();
-            GameObject itemHolder = new GameObject(tempInterface.getType().ToString());
-            for (int i = 0; i < tempInterface.getRecommendedListSize(); i++) {
+            GameObject itemHolder = new GameObject(tempInterface.GetItemType().ToString());
+            for (int i = 0; i < tempInterface.GetRecommendedListSize(); i++) {
                 GameObject temp = (GameObject) MonoBehaviour.Instantiate(item);
                 temp.SetActive(false);
-                if (itemDictionary.ContainsKey(tempInterface.getType())) {
-                    itemDictionary[tempInterface.getType()].Add(temp);
+                if (itemDictionary.ContainsKey(tempInterface.GetItemType())) {
+                    itemDictionary[tempInterface.GetItemType()].Add(temp);
                 }
                 else {
-                    List<GameObject> tempList = new List<GameObject>();
-                    tempList.Add(temp);
-                    itemDictionary.Add(tempInterface.getType(), tempList);
+                    List<GameObject> tempList = new List<GameObject>() {temp};
+                    itemDictionary.Add(tempInterface.GetItemType(), tempList);
                 }
                 temp.transform.parent = itemHolder.transform;
             }
@@ -46,8 +45,7 @@ public class ObjectPooler  {
                         game.GetComponent<Rigidbody>().useGravity = false;
                         game.GetComponent<Rigidbody>().isKinematic = true;
                     }
-                    catch { }
-
+                    catch(MissingComponentException) {}
                     return game;
                 }
             }

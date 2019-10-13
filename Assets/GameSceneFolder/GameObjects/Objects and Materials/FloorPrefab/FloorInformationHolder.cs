@@ -2,15 +2,15 @@
 using UnityEngine;
 
 public class FloorInformationHolder :MonoBehaviour, ObjectStatsInterface{
-    public ObjectClass getObjectClass() {
+    public ObjectClass GetObjectClass() {
         return ObjectClass.NOT_INTERESSTING;
     }
 
-    public int getRecommendedListSize() {
+    public int GetRecommendedListSize() {
         return 200;
     }
 
-    public ItemType getType() {
+    public ItemType GetItemType() {
         return ItemType.FLOOR;
     }
 

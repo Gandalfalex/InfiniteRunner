@@ -12,12 +12,11 @@ public class Groundgenerator {
 
 
     private int obstacles_z_start;
-    private int obstacles_z_end;
     private int leftOrRightSite;
 
     private int coinSpawn_position;
 
-    public int size = 40;
+    public int size = 10;
     private float[] positions = new float[3];
     private int lastPositionOfObject = 0;
 
@@ -31,12 +30,12 @@ public class Groundgenerator {
     public Groundgenerator(GameObject[] gameObjects) {
 
         foreach (GameObject gObject in gameObjects) {
-            ItemType itemType = gObject.GetComponent<ObjectStatsInterface>().getType();
+            ItemType itemType = gObject.GetComponent<ObjectStatsInterface>().GetItemType();
             if (itemType.Equals(ItemType.FLOOR)) {
                 floor_Scale = gObject.transform.localScale;
                 FillPositionsArray(floor_Scale.x);   
             }
-            if (gObject.GetComponent<ObjectStatsInterface>().getObjectClass().Equals(ObjectClass.OBSTACLE)) {
+            if (gObject.GetComponent<ObjectStatsInterface>().GetObjectClass().Equals(ObjectClass.OBSTACLE)) {
                 KeyValuePair<ItemType, Vector2> temp = new KeyValuePair<ItemType, Vector2>(itemType, 
                     gObject.GetComponent<ObstacleInterface>().GetPositionAndHeight());
 
@@ -46,7 +45,7 @@ public class Groundgenerator {
             }
         }
         god = ObjectPooler.instance;
-        god.setGameObjects(gameObjects);
+        god.SetGameObjects(gameObjects);
         SetNewVariables();
     }
 
@@ -81,14 +80,18 @@ public class Groundgenerator {
             HandleObjects(ItemType.FLOOR, new Vector3(i, low, lastPositionOfObject * floor_Scale.z));
         }
         HandleObjects(ItemType.COIN, new Vector3(positions[coinSpawn_position], heigh, lastPositionOfObject * floor_Scale.z));
-        HandleObjects(ItemType.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
-        if (lastPositionOfObject >= obstacles_z_start && lastPositionOfObject < obstacles_z_end) {
+        
+        if (lastPositionOfObject == obstacles_z_start) {
             KeyValuePair<ItemType, Vector2> temp = randomObjectsToSpawn[indexObjectToSpawn];
-            HandleObjects(temp.Key, new Vector3(temp.Value.x * floor_Scale.x * leftOrRightSite, temp.Value.y, lastPositionOfObject * floor_Scale.z));   ////////////////////////////// temp.Value.y
+            HandleObjects(temp.Key, new Vector3(temp.Value.x * floor_Scale.x * leftOrRightSite, temp.Value.y, lastPositionOfObject * floor_Scale.z));   
         }
-        else if (lastPositionOfObject > obstacles_z_end) {
+        else if (lastPositionOfObject > obstacles_z_start) {
             SetNewVariables();
         }
+        if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
+            HandleObjects(ItemType.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
+        }
+        
         lastPositionOfObject ++;
     }
 
@@ -106,7 +109,7 @@ public class Groundgenerator {
         GameObject temp = god.getOutOfObjectPool(item);
         if (temp != null && item.Equals(ItemType.COIN)) {
             temp.SetActive(true);
-            temp.GetComponent<CoinInterface>().setValue(newValue);
+            temp.GetComponent<CoinInterface>().SetValue(newValue);
             temp.transform.position = position;
             temp.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
@@ -129,7 +132,6 @@ public class Groundgenerator {
     private void SetNewVariables() {
         indexObjectToSpawn = Random.Range(0, randomObjectsToSpawn.Count);
         obstacles_z_start = lastPositionOfObject + Random.Range(6, 10);
-        obstacles_z_end = obstacles_z_start + Random.Range(2, 6);
         coinSpawn_position = Random.Range(0, positions.Length);
         int temp = Random.Range(-1, 1);
         if (temp == 0)

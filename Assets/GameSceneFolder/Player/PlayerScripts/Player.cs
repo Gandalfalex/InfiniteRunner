@@ -15,7 +15,10 @@ public class Player : MonoBehaviour{
         manager.setCoins(0);
         cam.transform.position = offset;
         cam.transform.rotation = Quaternion.Euler(rotation);
-        FindObjectOfType<Soundmanager>().playAudio("background");
+    }
+
+    private void Start() {
+        SoundManagerAccess.PlayRandomAudioByType(SoundType.MAINTHEME);
     }
 
     void Update(){
@@ -26,13 +29,12 @@ public class Player : MonoBehaviour{
 
 
     void OnCollisionEnter(Collision col) {
-        ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().getObjectClass();
+        ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().GetObjectClass();
         if (itemType.Equals(ObjectClass.OBSTACLE)) {
             HandleCollision(WorkWithCollision(col.contacts[0].point, 
                col.gameObject.transform.position, col.gameObject.transform.localScale.x));
         }
     }
-
 
     public void HandleCamMovement() {
         float newXPosition = transform.position.x/10;
@@ -50,6 +52,8 @@ public class Player : MonoBehaviour{
         else {
             manager.setPlayerEnum(PlayerStatEnum.DEAD);
             SceneManager.LoadScene("StartMenuScene");
+            SoundManagerAccess.PlayRandomAudioByType(SoundType.DEATHSOUND);
+            SoundManagerAccess.StopAudioByType(SoundType.MAINTHEME);
         }
         Vibration.Vibrate(50);
     }

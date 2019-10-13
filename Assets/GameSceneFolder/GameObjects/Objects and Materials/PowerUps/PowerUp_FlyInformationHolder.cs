@@ -6,7 +6,7 @@ public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
         return 10;
     }
 
-    public ObjectClass getObjectClass() {
+    public ObjectClass GetObjectClass() {
         return ObjectClass.POWERUPS;
     }
 
@@ -14,11 +14,11 @@ public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
         return PowerUp_Type.FLY;
     }
 
-    public int getRecommendedListSize() {
+    public int GetRecommendedListSize() {
         return 1;
     }
 
-    public ItemType getType() {
+    public ItemType GetItemType() {
         return ItemType.FLY_UP;
     }
     void OnTriggerEnter(Collider collider) {

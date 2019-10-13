@@ -13,7 +13,7 @@ public class PauseGameGUIManager : MonoBehaviour {
     private void Awake() {
         panelPausedGame.SetActive(false);
     }
-    public void startGame() {
+    public void StartGame() {
         ObjectPooler.instance.kill();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
@@ -22,7 +22,7 @@ public class PauseGameGUIManager : MonoBehaviour {
         Application.Quit();
     }
 
-    public void mainMenu() {
+    public void MainMenu() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex-1);
     }
 
@@ -33,7 +33,7 @@ public class PauseGameGUIManager : MonoBehaviour {
             panelPausedGame.SetActive(true);
         }
     }
-    public void resumeGame() {
+    public void ResumeGame() {
         Debug.Log("resume Game");
         if (panelPausedGame.activeInHierarchy && !panelInGame.activeInHierarchy) {
             Time.timeScale = 1;

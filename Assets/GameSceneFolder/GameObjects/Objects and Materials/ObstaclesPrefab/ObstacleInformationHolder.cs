@@ -6,16 +6,16 @@ public class ObstacleInformationHolder : MonoBehaviour, ObstacleInterface {
         return new Vector2(.5f , 1.5f);
     }
 
-    public ObjectClass getObjectClass() {
+    public ObjectClass GetObjectClass() {
         return ObjectClass.OBSTACLE;
     }
 
-    public int getRecommendedListSize() {
+    public int GetRecommendedListSize() {
         return 50;
     }
 
     // Start is called before the first frame update
-    public ItemType getType() {
+    public ItemType GetItemType() {
         return ItemType.OBSTACLE;
       }
 

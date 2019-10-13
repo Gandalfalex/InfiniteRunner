@@ -8,15 +8,15 @@ public class TunnelInformationHolder : MonoBehaviour, ObstacleInterface{
     }
 
 
-    public ObjectClass getObjectClass() {
+    public ObjectClass GetObjectClass() {
         return ObjectClass.OBSTACLE;
     }
 
-    public int getRecommendedListSize() {
+    public int GetRecommendedListSize() {
         return 20;
     }
 
-    public ItemType getType() {
+    public ItemType GetItemType() {
         return ItemType.TUNNEL;
     }
 
