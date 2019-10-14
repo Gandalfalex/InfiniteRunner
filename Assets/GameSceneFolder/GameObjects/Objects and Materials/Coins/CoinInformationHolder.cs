@@ -26,7 +26,7 @@ public class CoinInformationHolder : MonoBehaviour, CoinInterface{
         if (other.gameObject.tag.Equals("Player")) {
             PlayerManager.Instance.incCoins();
             gameObject.SetActive(false);
-           // SoundManagerAccess.PlayAudioWithPitch("collect", PlayerManager.Instance.getCoins()% PlayerManager.Instance.CoinMax());
+            SoundManagerAccess.PlayAudioWithPitch("collect", PlayerManager.Instance.getCoins()% PlayerManager.Instance.CoinMax());
         }
     }
    

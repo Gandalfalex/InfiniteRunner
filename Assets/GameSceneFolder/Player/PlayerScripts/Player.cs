@@ -50,15 +50,13 @@ public class Player : MonoBehaviour{
             manager.setNearDeath(true);
             StartCoroutine(ShakeCam(0.2f));
         }
-        else if (hitDirection.Equals(HitDirection.FRONT)) {
+        else {//if (hitDirection.Equals(HitDirection.FRONT) || hitDirection.Equals(HitDirection.UNKNOWN)) {
             manager.setPlayerEnum(PlayerStatEnum.DEAD);
             SceneManager.LoadScene("StartMenuScene");
-            SoundManagerAccess.PlayRandomAudioByType(SoundType.DEATHSOUND);
             SoundManagerAccess.StopAudioByType(SoundType.MAINTHEME);
+            SoundManagerAccess.PlayAudio("death");
         }
-        else {
-            Debug.Log("dunno");
-        }
+      
         Vibration.Vibrate(50);
     }
 
@@ -79,7 +77,7 @@ public class Player : MonoBehaviour{
 
     public HitDirection WorkWithCollision(Vector3 collision, Vector3 obstacle, float localScale_x) {
         Vector3 temp = (collision - transform.position);
-        Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
+       //    Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
         if (temp.x != 0) {
             return HitDirection.SITE;
         }

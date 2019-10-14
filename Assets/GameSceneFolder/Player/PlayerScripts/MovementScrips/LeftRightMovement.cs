@@ -6,7 +6,7 @@ public static class LeftRightMoveMent {
     private static bool siteHit = false;
     private static float startPoint;
     private static float destinationPoint;
-    private static readonly float speed = 30;
+    private static readonly float speed = 15;
 
     public static bool GetInMotion() { return inMotion; }
     public static void SetSiteHit() { siteHit = true; }
