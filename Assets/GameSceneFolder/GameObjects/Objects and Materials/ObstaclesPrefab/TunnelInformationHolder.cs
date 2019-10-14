@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TunnelInformationHolder : MonoBehaviour, ObstacleInterface{
     public Vector2 GetPositionAndHeight() {
-        return new Vector2(0, 3);
+        return new Vector2(0, 0);
     }
 
 

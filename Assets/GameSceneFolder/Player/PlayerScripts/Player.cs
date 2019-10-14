@@ -31,11 +31,32 @@ public class Player : MonoBehaviour{
     void OnCollisionEnter(Collision col) {
         ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().GetObjectClass();
         if (itemType.Equals(ObjectClass.OBSTACLE)) {
-            TestCollision(transform.position, col.transform.position, col.gameObject.transform.position, col.gameObject.transform.localScale);
-            HandleCollision(WorkWithCollision(col.contacts[0].point, 
-               col.gameObject.transform.position, col.gameObject.transform.localScale.x));
+            HandleCollision( TestCollision(transform.position, col.contacts[0].point, transform.localScale));
+            //HandleCollision(WorkWithCollision(col.contacts[0].point, 
+             //  col.gameObject.transform.position, col.gameObject.transform.localScale.x));
         }
     }
+    private HitDirection TestCollision(Vector3 playerPosition, Vector3 collision, Vector3 playerScale) {
+        Vector3 temp = collision - playerPosition;
+        float zPointNormalized = temp.z * playerScale.x;
+        float xPointNormalized = temp.x * playerScale.z;
+        if (xPointNormalized == 0)
+            return HitDirection.FRONT;
+        else return HitDirection.SITE;
+    }
+
+    public HitDirection WorkWithCollision(Vector3 collision, Vector3 obstacle, float localScale_x) {
+        Vector3 temp = (collision - transform.position);
+        Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
+        if (temp.x != 0) {
+            return HitDirection.SITE;
+        }
+        else if (Mathf.Abs(collision.x) <= (obstacle.x) && Mathf.Abs(collision.x) >= (obstacle.x - localScale_x)) {
+            return HitDirection.FRONT;
+        }
+        return HitDirection.UNKNOWN;
+    }
+    
 
     public void HandleCamMovement() {
         float newXPosition = transform.position.x/10;
@@ -75,23 +96,6 @@ public class Player : MonoBehaviour{
     }
 
 
-    public HitDirection WorkWithCollision(Vector3 collision, Vector3 obstacle, float localScale_x) {
-        Vector3 temp = (collision - transform.position);
-       //    Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
-        if (temp.x != 0) {
-            return HitDirection.SITE;
-        }
-        else if (Mathf.Abs(collision.x) <= (obstacle.x) && Mathf.Abs(collision.x) >= (obstacle.x - localScale_x)) {
-            return HitDirection.FRONT;
-        }
-        return HitDirection.UNKNOWN;
-    }
-
-
-    private void TestCollision(Vector3 playerPosition, Vector3 collision, Vector3 obstaclePosition, Vector3 obstacleScale) {
-        if (Between(playerPosition.x, obstacleScale.x, obstaclePosition.x))
-            Debug.Log("was between");
-    }
 
     private bool Between(float player_x, float obstacleScale_x, float obstaclePosition) {
         float leftBound = obstaclePosition - obstacleScale_x/2;

@@ -48,7 +48,7 @@ public class Soundmanager : MonoBehaviour{
         Sound temp = Array.Find(sounds, sound => sound.name == name);
         if (temp != null) {         
             temp.audioSource.pitch = temp.pitch - pitch / pitcher;
-            Debug.Log(temp.pitch - pitch / pitcher);
+
             temp.audioSource.Play();
             temp.audioSource.loop = temp.loop;
         } 
