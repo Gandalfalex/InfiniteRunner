@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Floor: MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class Floor: MonoBehaviour {
     private GameObject[] gameObjects;
     [SerializeField]
     private Transform playerPosition;
+    public Text text;
 
     private Vector3 floorScale;
    
@@ -20,16 +22,22 @@ public class Floor: MonoBehaviour {
             }
         }
         groundgenerator.GenerateLevel();
+        text.text = "GenerateLevel had no error, Where is the error????";
+       
+        
     }
+
 
 
     /* if the distance between the player and the last active object is less then 10
      * then !stopGenerating 
      * else start generating the new level
      */
-   void Update() {
-        if (groundgenerator.GetLastPosition() * floorScale.z - transform.position.z < 200){
-            groundgenerator.UpdateAtRuntime();  
+    private void Update() {
+       
+        if (groundgenerator.GetLastPosition() * floorScale.z - transform.position.z < 200) {
+            text.text = groundgenerator.SomeShit().ToString();
+            groundgenerator.UpdateAtRuntime();
         }
     }
 

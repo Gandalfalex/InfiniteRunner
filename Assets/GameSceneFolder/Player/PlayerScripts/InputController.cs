@@ -33,7 +33,7 @@ public  class InputController : MonoBehaviour{
                 rigidbody.velocity = Vector3.up * 6;
         }
 
-        if(Input.touchCount > 0) {
+        if(Input.touchCount >= 1) {
             Touch touch = Input.touches[0];
             if (touch.phase.Equals(TouchPhase.Began)) {
                 blocked = true;

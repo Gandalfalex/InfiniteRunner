@@ -31,6 +31,7 @@ public class Player : MonoBehaviour{
     void OnCollisionEnter(Collision col) {
         ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().GetObjectClass();
         if (itemType.Equals(ObjectClass.OBSTACLE)) {
+            TestCollision(transform.position, col.transform.position, col.gameObject.transform.position, col.gameObject.transform.localScale);
             HandleCollision(WorkWithCollision(col.contacts[0].point, 
                col.gameObject.transform.position, col.gameObject.transform.localScale.x));
         }
@@ -49,11 +50,14 @@ public class Player : MonoBehaviour{
             manager.setNearDeath(true);
             StartCoroutine(ShakeCam(0.2f));
         }
-        else {
+        else if (hitDirection.Equals(HitDirection.FRONT)) {
             manager.setPlayerEnum(PlayerStatEnum.DEAD);
             SceneManager.LoadScene("StartMenuScene");
             SoundManagerAccess.PlayRandomAudioByType(SoundType.DEATHSOUND);
             SoundManagerAccess.StopAudioByType(SoundType.MAINTHEME);
+        }
+        else {
+            Debug.Log("dunno");
         }
         Vibration.Vibrate(50);
     }
@@ -75,6 +79,7 @@ public class Player : MonoBehaviour{
 
     public HitDirection WorkWithCollision(Vector3 collision, Vector3 obstacle, float localScale_x) {
         Vector3 temp = (collision - transform.position);
+        Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
         if (temp.x != 0) {
             return HitDirection.SITE;
         }
@@ -82,5 +87,20 @@ public class Player : MonoBehaviour{
             return HitDirection.FRONT;
         }
         return HitDirection.UNKNOWN;
+    }
+
+
+    private void TestCollision(Vector3 playerPosition, Vector3 collision, Vector3 obstaclePosition, Vector3 obstacleScale) {
+        if (Between(playerPosition.x, obstacleScale.x, obstaclePosition.x))
+            Debug.Log("was between");
+    }
+
+    private bool Between(float player_x, float obstacleScale_x, float obstaclePosition) {
+        float leftBound = obstaclePosition - obstacleScale_x/2;
+        float rightBound = obstaclePosition + obstacleScale_x/2;
+        Debug.Log(leftBound + "   " + rightBound + "    " + player_x);
+        if (player_x >= leftBound && player_x <= rightBound)
+            return true;
+         return false;
     }
 }

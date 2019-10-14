@@ -42,8 +42,11 @@ public class ObjectPooler  {
             foreach (GameObject game in itemDictionary[item]) {
                 if (!game.activeInHierarchy) {
                     try {
-                        game.GetComponent<Rigidbody>().useGravity = false;
-                        game.GetComponent<Rigidbody>().isKinematic = true;
+                        Rigidbody rigidbody = game.GetComponent<Rigidbody>();
+                        if (rigidbody != null) {
+                            game.GetComponent<Rigidbody>().useGravity = false;
+                            game.GetComponent<Rigidbody>().isKinematic = true;
+                        }
                     }
                     catch(MissingComponentException) {}
                     return game;

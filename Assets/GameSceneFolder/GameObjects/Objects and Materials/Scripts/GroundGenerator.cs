@@ -66,6 +66,7 @@ public class Groundgenerator {
             }
         }
         lastPositionOfObject = size;
+
     }
 
 
@@ -79,6 +80,7 @@ public class Groundgenerator {
         for (float i = -floor_Scale.x; i <= floor_Scale.x; i+=floor_Scale.x) {
             HandleObjects(ItemType.FLOOR, new Vector3(i, low, lastPositionOfObject * floor_Scale.z));
         }
+ 
         HandleObjects(ItemType.COIN, new Vector3(positions[coinSpawn_position], heigh, lastPositionOfObject * floor_Scale.z));
         
         if (lastPositionOfObject == obstacles_z_start) {
@@ -91,8 +93,13 @@ public class Groundgenerator {
         if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
             HandleObjects(ItemType.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
         }
-        
-        lastPositionOfObject ++;
+       
+        lastPositionOfObject++;
+    }
+
+
+    public Vector2 SomeShit() {
+        return new Vector3(positions[coinSpawn_position], lastPositionOfObject * floor_Scale.z);
     }
 
 
@@ -105,16 +112,7 @@ public class Groundgenerator {
             temp.transform.position = position;
         }
     }
-    public void HandleObjects(ItemType item, Vector3 position, int newValue) {
-        GameObject temp = god.getOutOfObjectPool(item);
-        if (temp != null && item.Equals(ItemType.COIN)) {
-            temp.SetActive(true);
-            temp.GetComponent<CoinInterface>().SetValue(newValue);
-            temp.transform.position = position;
-            temp.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-    }
-
+   
 
     /* sets the objectpooler to default
      */
