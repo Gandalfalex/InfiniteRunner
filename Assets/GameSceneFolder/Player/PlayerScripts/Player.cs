@@ -32,31 +32,17 @@ public class Player : MonoBehaviour{
         ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().GetObjectClass();
         if (itemType.Equals(ObjectClass.OBSTACLE)) {
             HandleCollision( TestCollision(transform.position, col.contacts[0].point, transform.localScale));
-            //HandleCollision(WorkWithCollision(col.contacts[0].point, 
-             //  col.gameObject.transform.position, col.gameObject.transform.localScale.x));
         }
     }
     private HitDirection TestCollision(Vector3 playerPosition, Vector3 collision, Vector3 playerScale) {
-        Vector3 temp = collision - playerPosition;
-        float zPointNormalized = temp.z * playerScale.x;
-        float xPointNormalized = temp.x * playerScale.z;
-        if (xPointNormalized == 0)
+        Vector3 temp = (collision - playerPosition).normalized;
+        
+        if (temp.z == 1)
             return HitDirection.FRONT;
-        else return HitDirection.SITE;
-    }
-
-    public HitDirection WorkWithCollision(Vector3 collision, Vector3 obstacle, float localScale_x) {
-        Vector3 temp = (collision - transform.position);
-        Debug.Log(temp + "    " + collision + "    " + obstacle + "   " + transform.position);
-        if (temp.x != 0) {
+        if (Mathf.Abs(temp.x) == 1)
             return HitDirection.SITE;
-        }
-        else if (Mathf.Abs(collision.x) <= (obstacle.x) && Mathf.Abs(collision.x) >= (obstacle.x - localScale_x)) {
-            return HitDirection.FRONT;
-        }
-        return HitDirection.UNKNOWN;
+        else return HitDirection.UNKNOWN;
     }
-    
 
     public void HandleCamMovement() {
         float newXPosition = transform.position.x/10;
@@ -64,8 +50,7 @@ public class Player : MonoBehaviour{
         cam.transform.position = new Vector3(newXPosition, offset.y, newZPosition);
     }
 
-            
-
+   
     private void HandleCollision(HitDirection hitDirection) {
         if (hitDirection.Equals(HitDirection.SITE)) {
             manager.setNearDeath(true);
@@ -82,7 +67,6 @@ public class Player : MonoBehaviour{
     }
 
     private IEnumerator ShakeCam(float time) {
-
         float duration = 0f;
         while (duration < time) {
             Vector3 pos = cam.transform.position;
@@ -93,16 +77,5 @@ public class Player : MonoBehaviour{
             yield return null;
         }
         HandleCamMovement();
-    }
-
-
-
-    private bool Between(float player_x, float obstacleScale_x, float obstaclePosition) {
-        float leftBound = obstaclePosition - obstacleScale_x/2;
-        float rightBound = obstaclePosition + obstacleScale_x/2;
-        Debug.Log(leftBound + "   " + rightBound + "    " + player_x);
-        if (player_x >= leftBound && player_x <= rightBound)
-            return true;
-         return false;
     }
 }

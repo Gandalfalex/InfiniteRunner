@@ -38,6 +38,9 @@ public class Floor: MonoBehaviour {
         if (groundgenerator.GetLastPosition() * floorScale.z - transform.position.z < 200) {
             text.text = Mathf.RoundToInt(playerPosition.position.z).ToString();
             groundgenerator.UpdateAtRuntime();
+            if (groundgenerator.raiseEvent) {
+
+            }
         }
     }
 

@@ -20,6 +20,5 @@ public class ActionEventSystem : MonoBehaviour
             return;
         }
         PlayerPrefs.SetInt(key, 1);
-        Debug.Log(key);
     }
 }

@@ -25,10 +25,13 @@ public class Groundgenerator {
     private List<KeyValuePair<ItemType, Vector2>> randomObjectsToSpawn = new List<KeyValuePair<ItemType, Vector2>>();
     private int indexObjectToSpawn = 0;
 
+
+    public bool raiseEvent { get; set; }
+
     /*Sets up random vars to generate the level
      */
     public Groundgenerator(GameObject[] gameObjects) {
-
+        raiseEvent = false;
         foreach (GameObject gObject in gameObjects) {
             ItemType itemType = gObject.GetComponent<ObjectStatsInterface>().GetItemType();
             if (itemType.Equals(ItemType.FLOOR)) {
@@ -76,7 +79,7 @@ public class Groundgenerator {
     public void UpdateAtRuntime() {
         int heigh = 1;
         int low = 0;
-
+        raiseEvent = false;
         for (float i = -floor_Scale.x; i <= floor_Scale.x; i+=floor_Scale.x) {
             HandleObjects(ItemType.FLOOR, new Vector3(i, low, lastPositionOfObject * floor_Scale.z));
         }
@@ -91,17 +94,12 @@ public class Groundgenerator {
             SetNewVariables();
         }
         if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
+            raiseEvent = true;
             HandleObjects(ItemType.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
         }
        
         lastPositionOfObject++;
     }
-
-
-    public Vector2 SomeShit() {
-        return new Vector3(positions[coinSpawn_position], lastPositionOfObject * floor_Scale.z);
-    }
-
 
     /* activates new Prefabs, sets them active
      */

@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
 {
+    public event EventHandler myCustomEvent;
+
     public float Duration() {
         return 10;
     }
@@ -23,9 +26,11 @@ public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
     }
     void OnTriggerEnter(Collider collider) {
         if (collider.gameObject.tag.Equals("Player")) {
-            Debug.Log("hit Fly");
             gameObject.SetActive(false);
         }
     }
 
+    public void OnEvent() {
+        throw new NotImplementedException();
+    }
 }
