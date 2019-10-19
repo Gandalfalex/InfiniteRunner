@@ -1,9 +1,9 @@
 ﻿
 using UnityEngine;
 
-public class FloorInformationHolder :MonoBehaviour, ObjectStatsInterface{
-    public ObjectClass GetObjectClass() {
-        return ObjectClass.NOT_INTERESSTING;
+public class FloorInformationHolder :MonoBehaviour, IObjectStatsInterface{
+    public ObjectClassType GetObjectClass() {
+        return ObjectClassType.NOT_INTERESSTING;
     }
 
     public int GetRecommendedListSize() {

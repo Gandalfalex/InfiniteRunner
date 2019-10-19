@@ -33,14 +33,14 @@ public class Groundgenerator {
     public Groundgenerator(GameObject[] gameObjects) {
         raiseEvent = false;
         foreach (GameObject gObject in gameObjects) {
-            ItemType itemType = gObject.GetComponent<ObjectStatsInterface>().GetItemType();
+            ItemType itemType = gObject.GetComponent<IObjectStatsInterface>().GetItemType();
             if (itemType.Equals(ItemType.FLOOR)) {
                 floor_Scale = gObject.transform.localScale;
                 FillPositionsArray(floor_Scale.x);   
             }
-            if (gObject.GetComponent<ObjectStatsInterface>().GetObjectClass().Equals(ObjectClass.OBSTACLE)) {
+            if (gObject.GetComponent<IObjectStatsInterface>().GetObjectClass().Equals(ObjectClassType.OBSTACLE)) {
                 KeyValuePair<ItemType, Vector2> temp = new KeyValuePair<ItemType, Vector2>(itemType, 
-                    gObject.GetComponent<ObstacleInterface>().GetPositionAndHeight());
+                    gObject.GetComponent<IObstacleInterface>().GetPositionAndHeight());
 
                 if (!randomObjectsToSpawn.Contains(temp)) {
                     randomObjectsToSpawn.Add(temp);
@@ -93,9 +93,10 @@ public class Groundgenerator {
         else if (lastPositionOfObject > obstacles_z_start) {
             SetNewVariables();
         }
-        if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
-            raiseEvent = true;
-            HandleObjects(ItemType.FLY_UP, new Vector3(0, 3, lastPositionOfObject * floor_Scale.z));
+        //if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
+        if (obstacles_z_start - 4 == lastPositionOfObject) { 
+            if (HandleObjects(ItemType.FLY_UP, new Vector3(0, heigh, lastPositionOfObject * floor_Scale.z)))
+                raiseEvent = true;
         }
        
         lastPositionOfObject++;
@@ -103,12 +104,14 @@ public class Groundgenerator {
 
     /* activates new Prefabs, sets them active
      */
-    public void HandleObjects(ItemType item, Vector3 position) {
+    public bool HandleObjects(ItemType item, Vector3 position) {
         GameObject temp = god.getOutOfObjectPool(item);
         if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
+            return true;
         }
+        return false;
     }
    
 
@@ -132,6 +135,8 @@ public class Groundgenerator {
         int temp = Random.Range(-1, 1);
         if (temp == 0)
             leftOrRightSite = 1;
-        else leftOrRightSite = -1;
+        else
+            leftOrRightSite = -1;
     }
+
 }

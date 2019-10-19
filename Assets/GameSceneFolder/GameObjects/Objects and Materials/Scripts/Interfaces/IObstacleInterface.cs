@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public interface ObstacleInterface : ObjectStatsInterface {
+public interface IObstacleInterface : IObjectStatsInterface {
 
     Vector2 GetPositionAndHeight();
     

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
 
-public class ObstacleInformationHolder : MonoBehaviour, ObstacleInterface {
+public class ObstacleInformationHolder : MonoBehaviour, IObstacleInterface {
     public Vector2 GetPositionAndHeight() {
         return new Vector2(.5f , 1.5f);
     }
 
-    public ObjectClass GetObjectClass() {
-        return ObjectClass.OBSTACLE;
+    public ObjectClassType GetObjectClass() {
+        return ObjectClassType.OBSTACLE;
     }
 
     public int GetRecommendedListSize() {

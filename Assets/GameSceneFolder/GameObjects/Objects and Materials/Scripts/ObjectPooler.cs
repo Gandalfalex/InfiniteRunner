@@ -18,7 +18,7 @@ public class ObjectPooler  {
 
     public void SetGameObjects(GameObject[] gameObjects) {
         foreach (GameObject item in gameObjects) {  
-            ObjectStatsInterface tempInterface = item.GetComponent<ObjectStatsInterface>();
+            IObjectStatsInterface tempInterface = item.GetComponent<IObjectStatsInterface>();
             GameObject itemHolder = new GameObject(tempInterface.GetItemType().ToString());
             for (int i = 0; i < tempInterface.GetRecommendedListSize(); i++) {
                 GameObject temp = (GameObject) MonoBehaviour.Instantiate(item);

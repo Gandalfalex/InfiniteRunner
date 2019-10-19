@@ -13,11 +13,9 @@ public  class InputController : MonoBehaviour{
     [SerializeField]
     public Transform transformFloor;
     [SerializeField]
-    public Rigidbody rigidbody;
+    public Rigidbody rb;
 
-    private void Awake() {
-        Debug.Log(Time.deltaTime/5);
-    }
+   
     private void Update() {
         transform.position = ForwardMovement.Move(transform.position);
         
@@ -30,7 +28,7 @@ public  class InputController : MonoBehaviour{
             if (temp.x != 0)
                 LeftRightMoveMent.FirstMotion(transform.position, temp.x * transformFloor.localScale.x);
             else if (temp.y != 0)
-                rigidbody.velocity = Vector3.up * 6;
+                rb.velocity = Vector3.up * 6;
         }
 
         if(Input.touchCount >= 1) {
@@ -57,7 +55,7 @@ public  class InputController : MonoBehaviour{
         else if (s.Equals(Swipe.RIGHT))
             LeftRightMoveMent.FirstMotion(transform.position, transformFloor.localScale.x);
         else if (s.Equals(Swipe.UP))
-            rigidbody.velocity = Vector3.up * 6;
+            rb.velocity = Vector3.up * 6;
     }
 
     private void CheckNearDeath() {

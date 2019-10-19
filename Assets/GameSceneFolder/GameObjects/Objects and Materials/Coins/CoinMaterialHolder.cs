@@ -14,8 +14,6 @@ public sealed class CoinMaterialHolder  {
     private static readonly System.Lazy<CoinMaterialHolder> lazy = new System.Lazy<CoinMaterialHolder>(() => new CoinMaterialHolder());
 
 
-    
-
     public Material GetCoinMaterial(int i) {
        
         if(materialsCoins[i] != null) {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CoinInformationHolder : MonoBehaviour, CoinInterface{
+public class CoinInformationHolder : MonoBehaviour, ICoinInterface{
     private int value = 1;
 
    
@@ -12,15 +12,15 @@ public class CoinInformationHolder : MonoBehaviour, CoinInterface{
         return value;
     }
 
-    ItemType ObjectStatsInterface.GetItemType() {
+    ItemType IObjectStatsInterface.GetItemType() {
         return ItemType.COIN;
     }
     public void SetValue(int newValue) {
         value = newValue;
     }
 
-    public ObjectClass GetObjectClass() {
-        return ObjectClass.NOT_INTERESSTING;
+    public ObjectClassType GetObjectClass() {
+        return ObjectClassType.NOT_INTERESSTING;
     }
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag.Equals("Player")) {

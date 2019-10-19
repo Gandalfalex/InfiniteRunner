@@ -29,12 +29,16 @@ public class Player : MonoBehaviour{
 
 
     void OnCollisionEnter(Collision col) {
-        ObjectClass itemType = col.gameObject.GetComponent<ObjectStatsInterface>().GetObjectClass();
-        if (itemType.Equals(ObjectClass.OBSTACLE)) {
-            HandleCollision( TestCollision(transform.position, col.contacts[0].point, transform.localScale));
+        ObjectClassType itemType = col.gameObject.GetComponent<IObjectStatsInterface>().GetObjectClass();
+        if (itemType.Equals(ObjectClassType.OBSTACLE)) {
+            HandleCollision(CollisionDirection(transform.position, col.contacts[0].point));
+        }
+        if (col.gameObject.GetComponent<IObjectStatsInterface>().GetItemType().Equals(ItemType.FLY_UP)) {
+            Debug.Log("hit PowerUP");
+            col.gameObject.GetComponent<IPowerUpInterface>().OnRaiseEvent();
         }
     }
-    private HitDirection TestCollision(Vector3 playerPosition, Vector3 collision, Vector3 playerScale) {
+    private HitDirection CollisionDirection(Vector3 playerPosition, Vector3 collision) {
         Vector3 temp = (collision - playerPosition).normalized;
         
         if (temp.z == 1)

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TunnelInformationHolder : MonoBehaviour, ObstacleInterface{
+public class TunnelInformationHolder : MonoBehaviour, IObstacleInterface{
     public Vector2 GetPositionAndHeight() {
         return new Vector2(0, 0);
     }
 
 
-    public ObjectClass GetObjectClass() {
-        return ObjectClass.OBSTACLE;
+    public ObjectClassType GetObjectClass() {
+        return ObjectClassType.OBSTACLE;
     }
 
     public int GetRecommendedListSize() {

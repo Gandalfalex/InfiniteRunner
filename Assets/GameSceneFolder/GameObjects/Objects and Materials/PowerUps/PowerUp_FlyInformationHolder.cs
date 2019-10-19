@@ -1,16 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
+public class PowerUp_FlyInformationHolder : PowerUpEvent, IPowerUpInterface
 {
-    public event EventHandler myCustomEvent;
+   
+    
 
     public float Duration() {
         return 10;
     }
 
-    public ObjectClass GetObjectClass() {
-        return ObjectClass.POWERUPS;
+    public ObjectClassType GetObjectClass() {
+        return ObjectClassType.POWERUPS;
     }
 
     public PowerUp_Type GetPowerUp_Type() {
@@ -24,13 +25,8 @@ public class PowerUp_FlyInformationHolder : MonoBehaviour, PowerUpInterface
     public ItemType GetItemType() {
         return ItemType.FLY_UP;
     }
-    void OnTriggerEnter(Collider collider) {
-        if (collider.gameObject.tag.Equals("Player")) {
-            gameObject.SetActive(false);
-        }
-    }
 
-    public void OnEvent() {
-        throw new NotImplementedException();
+    public void OnRaiseEvent() {
+        OnInvoceEvent();
     }
 }

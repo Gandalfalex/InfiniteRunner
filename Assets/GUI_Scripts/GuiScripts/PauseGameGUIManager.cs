@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 public class PauseGameGUIManager : MonoBehaviour {
 
     [SerializeField]
-    private GameObject panelPausedGame;
+    public GameObject panelPausedGame;
     [SerializeField]
-    private GameObject panelInGame;
+    public GameObject panelInGame;
 
 
 
@@ -27,7 +27,6 @@ public class PauseGameGUIManager : MonoBehaviour {
     }
 
     public void PauseGame() {
-        Debug.Log("stop new Game");
         if (!panelPausedGame.activeInHierarchy) {
             Time.timeScale = 0;
             panelPausedGame.SetActive(true);

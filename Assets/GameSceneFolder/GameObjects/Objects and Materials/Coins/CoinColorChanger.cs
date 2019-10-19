@@ -8,7 +8,7 @@ public class CoinColorChanger : MonoBehaviour
    
 
     private void OnBecameVisible() {
-        int i = gameObject.GetComponentInParent<CoinInterface>().GetValue();
+        int i = gameObject.GetComponentInParent<ICoinInterface>().GetValue();
         if (materials[i] != null && i < materials.Length) {
             renderer.material = materials[i];
         }

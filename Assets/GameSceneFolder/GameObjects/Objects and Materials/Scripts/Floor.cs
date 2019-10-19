@@ -7,9 +7,9 @@ public class Floor: MonoBehaviour {
     private Groundgenerator groundgenerator;
     
     [SerializeField]
-    private GameObject[] gameObjects;
+    public GameObject[] gameObjects;
     [SerializeField]
-    private Transform playerPosition;
+    public Transform playerPosition;
     public Text text;
 
     private Vector3 floorScale;
@@ -17,14 +17,11 @@ public class Floor: MonoBehaviour {
     private void Awake() {
         groundgenerator = new Groundgenerator(gameObjects);
         foreach(GameObject game in gameObjects) {
-            if (game.GetComponent<ObjectStatsInterface>().GetItemType().Equals(ItemType.FLOOR)) {
+            if (game.GetComponent<IObjectStatsInterface>().GetItemType().Equals(ItemType.FLOOR)) {
                 floorScale = game.transform.localScale;
             }
         }
         groundgenerator.GenerateLevel();
-        text.text = "GenerateLevel had no error, Where is the error????";
-       
-        
     }
 
 
@@ -39,7 +36,7 @@ public class Floor: MonoBehaviour {
             text.text = Mathf.RoundToInt(playerPosition.position.z).ToString();
             groundgenerator.UpdateAtRuntime();
             if (groundgenerator.raiseEvent) {
-
+                PowerUpEvent.PowerUp_Event += PowerUPEvent_RegisterNewEvent;
             }
         }
     }
@@ -48,4 +45,15 @@ public class Floor: MonoBehaviour {
         groundgenerator.DestroyObjectPooler();
     }
 
+
+    private void Unregister() {
+        PowerUpEvent.PowerUp_Event -= PowerUPEvent_RegisterNewEvent;
+    }
+
+    private void PowerUPEvent_RegisterNewEvent(PowerUpEvent oEvent) {
+        IPowerUpInterface temp = (oEvent.GetComponentInChildren<IPowerUpInterface>());
+        Debug.Log(temp.GetType() + "   " + temp.GetPowerUp_Type());
+
+        Unregister();
+    }
 }
