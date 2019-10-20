@@ -14,8 +14,10 @@ public  class InputController : MonoBehaviour{
     public Transform transformFloor;
     [SerializeField]
     public Rigidbody rb;
+    private void Start() {
+        rb = GetComponent<Rigidbody>();
+    }
 
-   
     private void Update() {
         transform.position = ForwardMovement.Move(transform.position);
         

@@ -93,9 +93,8 @@ public class Groundgenerator {
         else if (lastPositionOfObject > obstacles_z_start) {
             SetNewVariables();
         }
-        //if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
-        if (obstacles_z_start - 4 == lastPositionOfObject) { 
-            if (HandleObjects(ItemType.FLY_UP, new Vector3(0, heigh, lastPositionOfObject * floor_Scale.z)))
+        if (obstacles_z_start - 4 == lastPositionOfObject && Random.Range(0,10) == 5) {
+            if (HandleObjects(ItemType.FLY_UP, new Vector3(0, 2, lastPositionOfObject * floor_Scale.z)))
                 raiseEvent = true;
         }
        
@@ -106,6 +105,10 @@ public class Groundgenerator {
      */
     public bool HandleObjects(ItemType item, Vector3 position) {
         GameObject temp = god.getOutOfObjectPool(item);
+        if (item.Equals(ItemType.COIN)) {
+            int i = Range(lastPositionOfObject + obstacles_z_start, 4,10);
+            temp.GetComponent<ICoinInterface>().SetValue(i);
+        }
         if (temp != null) {
             temp.SetActive(true);
             temp.transform.position = position;
@@ -121,7 +124,6 @@ public class Groundgenerator {
         god.kill();
     }
 
-
     private void FillPositionsArray(float localScale_x) {
         positions[0] = -localScale_x;
         positions[1] = 0;
@@ -133,10 +135,11 @@ public class Groundgenerator {
         obstacles_z_start = lastPositionOfObject + Random.Range(6, 10);
         coinSpawn_position = Random.Range(0, positions.Length);
         int temp = Random.Range(-1, 1);
-        if (temp == 0)
-            leftOrRightSite = 1;
-        else
-            leftOrRightSite = -1;
+        leftOrRightSite = (temp == 0) ? 1 : -1;
     }
-
+    private int Range(int myValue, int maxValue, int myMaxValue) {
+        float i = myValue * (maxValue / myMaxValue);
+        Debug.Log(i);
+        return Random.Range(0, 4);
+    }
 }
